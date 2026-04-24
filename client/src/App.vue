@@ -172,8 +172,8 @@ export default {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f1f5f9;
   color: #1e293b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -186,12 +186,22 @@ body {
 }
 
 .top-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  background: #0f172a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.top-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
 }
 
 .nav-container {
@@ -221,16 +231,16 @@ body {
 .logo h1 {
   font-size: 1.375rem;
   font-weight: 700;
-  color: #0f172a;
+  color: #f8fafc;
   letter-spacing: -0.025em;
 }
 
 .subtitle {
   font-size: 0.813rem;
-  color: #64748b;
+  color: rgba(148, 163, 184, 0.75);
   font-weight: 400;
   padding-left: 0.75rem;
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .nav-tabs {
@@ -240,7 +250,7 @@ body {
 
 .nav-tabs a {
   padding: 0.625rem 1.25rem;
-  color: #64748b;
+  color: rgba(148, 163, 184, 0.85);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.938rem;
@@ -250,13 +260,13 @@ body {
 }
 
 .nav-tabs a:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .nav-tabs a.active {
-  color: #2563eb;
-  background: #eff6ff;
+  color: #93c5fd;
+  background: rgba(96, 165, 250, 0.12);
 }
 
 .nav-tabs a.active::after {
@@ -266,7 +276,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: #2563eb;
+  background: #60a5fa;
 }
 
 .main-content {
@@ -304,14 +314,16 @@ body {
 .stat-card {
   background: white;
   padding: 1.25rem;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
   transition: all 0.2s ease;
 }
 
 .stat-card:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .stat-label {
@@ -348,9 +360,10 @@ body {
 
 .card {
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 1.25rem;
   border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
   margin-bottom: 1.25rem;
 }
 

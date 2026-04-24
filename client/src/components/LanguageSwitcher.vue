@@ -98,23 +98,23 @@ const selectLanguage = (locale) => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.875rem;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
   font-size: 0.875rem;
-  color: #334155;
+  color: rgba(248, 250, 252, 0.85);
 }
 
 .language-button:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .globe-icon {
-  color: #64748b;
+  color: rgba(148, 163, 184, 0.7);
   flex-shrink: 0;
 }
 
@@ -123,7 +123,7 @@ const selectLanguage = (locale) => {
 }
 
 .chevron {
-  color: #64748b;
+  color: rgba(148, 163, 184, 0.7);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }

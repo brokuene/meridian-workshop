@@ -761,8 +761,16 @@ export default {
 .kpi-card {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 1rem;
+  border-left: 3px solid #3b82f6;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .kpi-header {
