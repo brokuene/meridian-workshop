@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" font-family="'Segoe UI', Arial, sans-serif">
+  <!-- Background -->
+  <rect width="960" height="600" fill="#f8fafc" rx="8"/>
+
+  <!-- Title -->
+  <text x="480" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Meridian Components — Target State Architecture</text>
+  <text x="480" y="56" text-anchor="middle" font-size="12" fill="#64748b">To-Be · Post-engagement delivery</text>
+
+  <!-- ── USERS ── -->
+  <rect x="30" y="90" width="130" height="390" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="95" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">USERS</text>
+
+  <rect x="46" y="124" width="98" height="52" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1" rx="6"/>
+  <text x="95" y="144" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">San Francisco</text>
+  <text x="95" y="160" text-anchor="middle" font-size="10" fill="#64748b">HQ / Primary</text>
+  <text x="95" y="173" text-anchor="middle" font-size="10" fill="#64748b">warehouse</text>
+
+  <rect x="46" y="188" width="98" height="52" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1" rx="6"/>
+  <text x="95" y="208" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">London</text>
+  <text x="95" y="224" text-anchor="middle" font-size="10" fill="#64748b">EMEA</text>
+  <text x="95" y="237" text-anchor="middle" font-size="10" fill="#64748b">warehouse</text>
+
+  <rect x="46" y="252" width="98" height="52" fill="#dcfce7" stroke="#86efac" stroke-width="1" rx="6"/>
+  <text x="95" y="272" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">Tokyo</text>
+  <text x="95" y="288" text-anchor="middle" font-size="10" fill="#64748b">APAC</text>
+  <text x="95" y="301" text-anchor="middle" font-size="10" fill="#15803d">Japanese UI ✓</text>
+
+  <!-- ── FRONTEND ── -->
+  <rect x="220" y="90" width="300" height="420" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" rx="8"/>
+  <text x="370" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">FRONTEND — Vue 3 + Vite · port 3000</text>
+
+  <!-- Views -->
+  <rect x="236" y="124" width="268" height="220" fill="#dbeafe" stroke="#93c5fd" stroke-width="1" rx="6"/>
+  <text x="370" y="142" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">Views (client/src/views/)</text>
+
+  <rect x="246" y="152" width="108" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="300" y="170" text-anchor="middle" font-size="10" fill="#1e293b">Dashboard.vue</text>
+
+  <rect x="366" y="152" width="108" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="420" y="170" text-anchor="middle" font-size="10" fill="#1e293b">Inventory.vue</text>
+
+  <rect x="246" y="190" width="108" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="300" y="208" text-anchor="middle" font-size="10" fill="#1e293b">Orders.vue</text>
+
+  <rect x="366" y="190" width="108" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="420" y="208" text-anchor="middle" font-size="10" fill="#1e293b">Demand.vue</text>
+
+  <rect x="246" y="228" width="108" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="300" y="246" text-anchor="middle" font-size="10" fill="#1e293b">Spending.vue</text>
+
+  <rect x="366" y="228" width="108" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="420" y="246" text-anchor="middle" font-size="10" fill="#1e293b">Backlog.vue</text>
+
+  <!-- Reports fixed -->
+  <rect x="246" y="266" width="108" height="28" fill="#dcfce7" stroke="#86efac" stroke-width="1.5" rx="4"/>
+  <text x="300" y="284" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">✓ Reports.vue</text>
+
+  <!-- Restocking NEW -->
+  <rect x="366" y="266" width="108" height="28" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="4"/>
+  <text x="420" y="280" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">✦ Restocking.vue</text>
+  <text x="420" y="292" text-anchor="middle" font-size="8" fill="#16a34a">NEW</text>
+
+  <!-- api.js -->
+  <rect x="236" y="360" width="268" height="36" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1" rx="6"/>
+  <text x="370" y="382" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">api.js — HTTP client</text>
+
+  <!-- i18n full -->
+  <rect x="236" y="412" width="120" height="54" fill="#dcfce7" stroke="#86efac" stroke-width="1.5" rx="6"/>
+  <text x="296" y="430" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">✓ useI18n()</text>
+  <text x="296" y="446" text-anchor="middle" font-size="9" fill="#166534">en.js ✓  ja.js ✓</text>
+  <text x="296" y="460" text-anchor="middle" font-size="9" fill="#166534">full coverage</text>
+
+  <!-- Dark mode badge -->
+  <rect x="370" y="412" width="134" height="54" fill="#f3e8ff" stroke="#c084fc" stroke-width="1.5" rx="6"/>
+  <text x="437" y="430" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed">✦ Dark Mode</text>
+  <text x="437" y="446" text-anchor="middle" font-size="9" fill="#6d28d9">CSS variable swap</text>
+  <text x="437" y="460" text-anchor="middle" font-size="9" fill="#6d28d9">localStorage toggle</text>
+
+  <!-- ── ARROWS users → frontend ── -->
+  <line x1="160" y1="290" x2="218" y2="290" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <text x="189" y="284" text-anchor="middle" font-size="9" fill="#64748b">HTTP</text>
+
+  <!-- ── BACKEND ── -->
+  <rect x="580" y="90" width="260" height="310" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" rx="8"/>
+  <text x="710" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">BACKEND — FastAPI · port 8001</text>
+
+  <!-- Endpoints -->
+  <rect x="596" y="124" width="228" height="200" fill="#dcfce7" stroke="#86efac" stroke-width="1" rx="6"/>
+  <text x="710" y="142" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">16 + 1 REST Endpoints</text>
+  <text x="710" y="160" text-anchor="middle" font-size="9" fill="#166534">GET /api/inventory · /api/orders</text>
+  <text x="710" y="176" text-anchor="middle" font-size="9" fill="#166534">GET /api/dashboard/summary</text>
+  <text x="710" y="192" text-anchor="middle" font-size="9" fill="#166534">GET /api/demand · /api/backlog</text>
+  <text x="710" y="208" text-anchor="middle" font-size="9" fill="#166534">GET /api/reports/quarterly</text>
+  <text x="710" y="224" text-anchor="middle" font-size="9" fill="#166534">GET /api/reports/monthly-trends</text>
+  <text x="710" y="240" text-anchor="middle" font-size="9" fill="#166534">GET /api/spending/*</text>
+  <text x="710" y="260" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">✦ GET /api/restocking?budget=N</text>
+  <text x="710" y="278" text-anchor="middle" font-size="9" fill="#166534">mock_data.py</text>
+  <text x="710" y="296" text-anchor="middle" font-size="9" fill="#166534">rule-based recommendation logic</text>
+  <text x="710" y="312" text-anchor="middle" font-size="9" fill="#166534">NEW</text>
+
+  <!-- Data files -->
+  <rect x="596" y="336" width="228" height="54" fill="#bbf7d0" stroke="#86efac" stroke-width="1" rx="6"/>
+  <text x="710" y="356" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">server/data/*.json</text>
+  <text x="710" y="372" text-anchor="middle" font-size="9" fill="#166534">inventory · orders · demand</text>
+  <text x="710" y="388" text-anchor="middle" font-size="9" fill="#166534">backlog · spending · suppliers</text>
+
+  <!-- Arrow api.js → backend -->
+  <line x1="506" y1="378" x2="578" y2="300" stroke="#60a5fa" stroke-width="1.5" marker-end="url(#arrowblue2)"/>
+  <text x="540" y="333" text-anchor="middle" font-size="9" fill="#3b82f6">HTTP/REST</text>
+
+  <!-- ── PLAYWRIGHT TESTS ── -->
+  <rect x="580" y="416" width="260" height="94" fill="#fdf4ff" stroke="#c084fc" stroke-width="1.5" rx="8"/>
+  <text x="710" y="436" text-anchor="middle" font-size="10" font-weight="600" fill="#7c3aed">✦ Playwright E2E Tests (R3)</text>
+  <text x="710" y="454" text-anchor="middle" font-size="9" fill="#6d28d9">✓ Dashboard KPIs load</text>
+  <text x="710" y="470" text-anchor="middle" font-size="9" fill="#6d28d9">✓ Inventory filter · Reports render</text>
+  <text x="710" y="486" text-anchor="middle" font-size="9" fill="#6d28d9">✓ Restocking flow · i18n toggle</text>
+  <text x="710" y="502" text-anchor="middle" font-size="9" fill="#6d28d9">IT-approved change gate ✓</text>
+
+  <!-- ── ARCHITECTURE DOCS ── -->
+  <rect x="220" y="526" width="620" height="52" fill="#fefce8" stroke="#fde047" stroke-width="1.5" rx="8"/>
+  <text x="530" y="548" text-anchor="middle" font-size="11" font-weight="600" fill="#a16207">✦ Architecture Documentation (R4)</text>
+  <text x="530" y="566" text-anchor="middle" font-size="10" fill="#92400e">proposal/architecture.html · handoff-ready for Meridian IT · view map · endpoint inventory · data flow · i18n system</text>
+
+  <!-- Arrow defs -->
+  <defs>
+    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrowblue2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#60a5fa"/>
+    </marker>
+  </defs>
+</svg>

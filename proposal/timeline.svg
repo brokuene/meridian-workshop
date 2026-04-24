@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" width="1000" height="620" font-family="'Segoe UI', Arial, sans-serif">
+  <!-- Background -->
+  <rect width="1000" height="620" fill="#f8fafc" rx="8"/>
+
+  <!-- Title -->
+  <text x="500" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Delivery Timeline — RFP #MC-2026-0417</text>
+  <text x="500" y="56" text-anchor="middle" font-size="12" fill="#64748b">8 weeks from contract execution · Fixed-fee NTE $128,000</text>
+
+  <!-- Week column headers -->
+  <text x="130" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#94a3b8">ROLE</text>
+
+  <!-- Week labels -->
+  <text x="230" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 1</text>
+  <text x="310" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 2</text>
+  <text x="390" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 3</text>
+  <text x="470" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 4</text>
+  <text x="550" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 5</text>
+  <text x="630" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 6</text>
+  <text x="710" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 7</text>
+  <text x="790" y="82" text-anchor="middle" font-size="10" font-weight="600" fill="#64748b">WK 8</text>
+
+  <!-- Grid lines -->
+  <line x1="190" y1="88" x2="190" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="270" y1="88" x2="270" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="350" y1="88" x2="350" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="430" y1="88" x2="430" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="510" y1="88" x2="510" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="590" y1="88" x2="590" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="670" y1="88" x2="670" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="750" y1="88" x2="750" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="830" y1="88" x2="830" y2="420" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- ── ROW 1: Architect / Full-stack ── -->
+  <text x="10" y="118" font-size="10" font-weight="600" fill="#1e293b">Architect /</text>
+  <text x="10" y="130" font-size="10" font-weight="600" fill="#1e293b">Full-stack</text>
+
+  <!-- R4: Wk 1-2 -->
+  <rect x="192" y="100" width="156" height="26" fill="#fde68a" stroke="#f59e0b" stroke-width="1" rx="4"/>
+  <text x="270" y="117" text-anchor="middle" font-size="9" font-weight="600" fill="#92400e">R4 — Architecture docs + onboarding</text>
+
+  <!-- R1: Wk 1-4 -->
+  <rect x="192" y="132" width="316" height="26" fill="#fca5a5" stroke="#ef4444" stroke-width="1" rx="4"/>
+  <text x="350" y="149" text-anchor="middle" font-size="9" font-weight="600" fill="#7f1d1d">R1 — Reports audit + defect remediation</text>
+
+  <!-- R2 backend: Wk 3-5 -->
+  <rect x="352" y="164" width="236" height="26" fill="#a5b4fc" stroke="#6366f1" stroke-width="1" rx="4"/>
+  <text x="470" y="181" text-anchor="middle" font-size="9" font-weight="600" fill="#312e81">R2 — Restocking backend + /api/restocking</text>
+
+  <!-- Integration: Wk 7-8 -->
+  <rect x="672" y="100" width="156" height="90" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1" rx="4"/>
+  <text x="750" y="120" text-anchor="middle" font-size="9" font-weight="600" fill="#475569">Integration</text>
+  <text x="750" y="136" text-anchor="middle" font-size="9" fill="#64748b">Client review</text>
+  <text x="750" y="152" text-anchor="middle" font-size="9" fill="#64748b">Handoff docs</text>
+  <text x="750" y="168" text-anchor="middle" font-size="9" fill="#64748b">Sign-off</text>
+
+  <!-- ── ROW 2: Frontend Engineer ── -->
+  <text x="10" y="238" font-size="10" font-weight="600" fill="#1e293b">Frontend</text>
+  <text x="10" y="250" font-size="10" font-weight="600" fill="#1e293b">Engineer</text>
+
+  <!-- Ramp wk 2 -->
+  <rect x="272" y="222" width="76" height="26" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" rx="4" stroke-dasharray="4,2"/>
+  <text x="310" y="239" text-anchor="middle" font-size="9" fill="#94a3b8">Ramp / setup</text>
+
+  <!-- R2 frontend: Wk 3-6 -->
+  <rect x="352" y="222" width="316" height="26" fill="#a5b4fc" stroke="#6366f1" stroke-width="1" rx="4"/>
+  <text x="510" y="239" text-anchor="middle" font-size="9" font-weight="600" fill="#312e81">R2 — RestockingView.vue + router + nav</text>
+
+  <!-- D1/D2/D3: Wk 3-7 parallel -->
+  <rect x="352" y="254" width="396" height="26" fill="#d1fae5" stroke="#34d399" stroke-width="1" rx="4"/>
+  <text x="550" y="271" text-anchor="middle" font-size="9" font-weight="600" fill="#065f46">D1 UI refresh · D2 i18n extension · D3 dark mode  (parallel, non-blocking)</text>
+
+  <!-- ── ROW 3: QA / Test Engineer ── -->
+  <text x="10" y="328" font-size="10" font-weight="600" fill="#1e293b">QA / Test</text>
+  <text x="10" y="340" font-size="10" font-weight="600" fill="#1e293b">Engineer</text>
+
+  <!-- Ramp wk 3 -->
+  <rect x="352" y="310" width="76" height="26" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" rx="4" stroke-dasharray="4,2"/>
+  <text x="390" y="327" text-anchor="middle" font-size="9" fill="#94a3b8">Ramp</text>
+
+  <!-- R3 Playwright: Wk 4-7 -->
+  <rect x="432" y="310" width="316" height="26" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" rx="4"/>
+  <text x="590" y="327" text-anchor="middle" font-size="9" font-weight="600" fill="#4c1d95">R3 — Playwright E2E tests (built alongside R1+R2)</text>
+
+  <!-- Regression: Wk 7-8 -->
+  <rect x="752" y="310" width="76" height="26" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" rx="4"/>
+  <text x="790" y="327" text-anchor="middle" font-size="9" fill="#4c1d95">Regression</text>
+
+  <!-- ── MILESTONE LINE ── -->
+  <line x1="190" y1="388" x2="830" y2="388" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- M0 -->
+  <circle cx="190" cy="388" r="7" fill="#0f172a"/>
+  <text x="190" y="408" text-anchor="middle" font-size="9" font-weight="600" fill="#0f172a">M0</text>
+  <text x="190" y="420" text-anchor="middle" font-size="8" fill="#64748b">Contract</text>
+
+  <!-- M1: End wk 2 -->
+  <circle cx="350" cy="388" r="7" fill="#f59e0b"/>
+  <text x="350" y="408" text-anchor="middle" font-size="9" font-weight="600" fill="#92400e">M1</text>
+  <text x="350" y="420" text-anchor="middle" font-size="8" fill="#64748b">R4 + R1 audit</text>
+
+  <!-- M2: End wk 4 -->
+  <circle cx="510" cy="388" r="7" fill="#ef4444"/>
+  <text x="510" y="408" text-anchor="middle" font-size="9" font-weight="600" fill="#7f1d1d">M2</text>
+  <text x="510" y="420" text-anchor="middle" font-size="8" fill="#64748b">R1 fixed + R2 backend</text>
+
+  <!-- M3: End wk 6 -->
+  <circle cx="670" cy="388" r="7" fill="#6366f1"/>
+  <text x="670" y="408" text-anchor="middle" font-size="9" font-weight="600" fill="#312e81">M3</text>
+  <text x="670" y="420" text-anchor="middle" font-size="8" fill="#64748b">R2 + R3 complete</text>
+
+  <!-- M4: End wk 8 -->
+  <circle cx="830" cy="388" r="7" fill="#15803d"/>
+  <text x="830" y="408" text-anchor="middle" font-size="9" font-weight="600" fill="#14532d">M4</text>
+  <text x="830" y="420" text-anchor="middle" font-size="8" fill="#64748b">Final delivery</text>
+
+  <!-- Milestone lines up -->
+  <line x1="350" y1="380" x2="350" y2="96" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="510" y1="380" x2="510" y2="96" stroke="#ef4444" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="670" y1="380" x2="670" y2="96" stroke="#6366f1" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="830" y1="380" x2="830" y2="96" stroke="#15803d" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- ── MILESTONE TABLE ── -->
+  <rect x="30" y="440" width="940" height="160" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" rx="8"/>
+  <text x="500" y="460" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">Milestone Summary</text>
+
+  <!-- Headers -->
+  <text x="60" y="480" font-size="10" font-weight="600" fill="#475569">Milestone</text>
+  <text x="160" y="480" font-size="10" font-weight="600" fill="#475569">End of week</text>
+  <text x="280" y="480" font-size="10" font-weight="600" fill="#475569">Deliverables</text>
+  <text x="700" y="480" font-size="10" font-weight="600" fill="#475569">Payment trigger</text>
+  <line x1="40" y1="485" x2="960" y2="485" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- M0 -->
+  <circle cx="55" cy="500" r="5" fill="#0f172a"/>
+  <text x="70" y="504" font-size="10" font-weight="600" fill="#0f172a">M0 — Kickoff</text>
+  <text x="165" y="504" font-size="10" fill="#64748b">Week 0</text>
+  <text x="285" y="504" font-size="10" fill="#64748b">Contract executed · backlog drafted · environments set up</text>
+  <text x="705" y="504" font-size="10" fill="#64748b">30% on signature</text>
+
+  <!-- M1 -->
+  <circle cx="55" cy="522" r="5" fill="#f59e0b"/>
+  <text x="70" y="526" font-size="10" font-weight="600" fill="#92400e">M1 — Stabilise</text>
+  <text x="165" y="526" font-size="10" fill="#64748b">Week 2</text>
+  <text x="285" y="526" font-size="10" fill="#64748b">R4 architecture doc delivered · R1 full defect audit signed off</text>
+  <text x="705" y="526" font-size="10" fill="#64748b">—</text>
+
+  <!-- M2 -->
+  <circle cx="55" cy="544" r="5" fill="#ef4444"/>
+  <text x="70" y="548" font-size="10" font-weight="600" fill="#7f1d1d">M2 — Unlock</text>
+  <text x="165" y="548" font-size="10" fill="#64748b">Week 4</text>
+  <text x="285" y="548" font-size="10" fill="#64748b">R1 all defects resolved · R2 backend endpoint live · R3 tests in progress</text>
+  <text x="705" y="548" font-size="10" fill="#64748b">40% on R1+R3 sign-off</text>
+
+  <!-- M3 -->
+  <circle cx="55" cy="562" r="5" fill="#6366f1"/>
+  <text x="70" y="566" font-size="10" font-weight="600" fill="#312e81">M3 — Build complete</text>
+  <text x="165" y="566" font-size="10" fill="#64748b">Week 6</text>
+  <text x="285" y="566" font-size="10" fill="#64748b">R2 Restocking view shipped · R3 full Playwright suite passing · D1/D2/D3 complete</text>
+  <text x="705" y="566" font-size="10" fill="#64748b">—</text>
+
+  <!-- M4 -->
+  <circle cx="55" cy="580" r="5" fill="#15803d"/>
+  <text x="70" y="584" font-size="10" font-weight="600" fill="#14532d">M4 — Final delivery</text>
+  <text x="165" y="584" font-size="10" fill="#64748b">Week 8</text>
+  <text x="285" y="584" font-size="10" fill="#64748b">Integration complete · client review done · handoff package delivered</text>
+  <text x="705" y="584" font-size="10" fill="#64748b">30% on final delivery</text>
+</svg>

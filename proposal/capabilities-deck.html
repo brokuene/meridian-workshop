@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capabilities Deck — Meridian Components RFP #MC-2026-0417</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f172a; color: #e2e8f0; }
+  .deck { width: 100%; }
+  .slide {
+    width: 100%; min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; padding: 60px 80px;
+    border-bottom: 1px solid #1e293b; position: relative;
+  }
+  .slide-number { position: absolute; top: 24px; right: 32px; font-size: 12px; color: #475569; letter-spacing: 0.05em; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #64748b; margin-bottom: 16px; }
+  h1 { font-size: 52px; font-weight: 800; line-height: 1.1; color: #f8fafc; }
+  h2 { font-size: 36px; font-weight: 700; color: #f8fafc; margin-bottom: 24px; }
+  h3 { font-size: 20px; font-weight: 600; color: #f8fafc; margin-bottom: 8px; }
+  .accent { color: #38bdf8; }
+  .green { color: #4ade80; }
+  .amber { color: #fbbf24; }
+  .red { color: #f87171; }
+  .purple { color: #c084fc; }
+  p { font-size: 17px; line-height: 1.7; color: #94a3b8; max-width: 760px; }
+  .lead { font-size: 22px; color: #cbd5e1; line-height: 1.6; max-width: 800px; }
+  .slide-title { background: #0f172a; }
+  .slide-title h1 { font-size: 56px; }
+  .slide-title .sub { font-size: 20px; color: #64748b; margin-top: 16px; }
+  .slide-title .rfp-badge { display: inline-block; background: #1e293b; border: 1px solid #334155; padding: 6px 16px; border-radius: 20px; font-size: 13px; color: #64748b; margin-bottom: 32px; letter-spacing: 0.04em; }
+  .divider { width: 60px; height: 3px; background: #38bdf8; margin: 24px 0; border-radius: 2px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 16px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; margin-top: 16px; }
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 24px 28px; }
+  .card.highlight { border-color: #38bdf8; }
+  .card.green-border { border-color: #4ade80; }
+  .card.amber-border { border-color: #fbbf24; }
+  .card.purple-border { border-color: #c084fc; }
+  .card p { font-size: 15px; margin-top: 8px; }
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+  .tag-req { background: #1e3a5f; color: #60a5fa; }
+  .tag-new { background: #14532d; color: #4ade80; }
+  .tag-desired { background: #3b1f5e; color: #c084fc; }
+  .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px; }
+  .ps-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+  .ps-col ul { list-style: none; }
+  .ps-col ul li { font-size: 15px; color: #94a3b8; padding: 8px 0; border-bottom: 1px solid #1e293b; line-height: 1.5; }
+  .ps-col ul li:last-child { border-bottom: none; }
+  .timeline { margin-top: 24px; }
+  .tl-row { display: grid; grid-template-columns: 100px 1fr; gap: 16px; margin-bottom: 12px; align-items: start; }
+  .tl-week { font-size: 12px; font-weight: 700; color: #64748b; padding-top: 4px; }
+  .tl-bar { background: #1e293b; border-left: 3px solid #38bdf8; padding: 10px 16px; border-radius: 0 6px 6px 0; }
+  .tl-bar.m1 { border-color: #fbbf24; }
+  .tl-bar.m2 { border-color: #f87171; }
+  .tl-bar.m3 { border-color: #818cf8; }
+  .tl-bar.m4 { border-color: #4ade80; }
+  .tl-title { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+  .tl-detail { font-size: 13px; color: #64748b; margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  th { text-align: left; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #64748b; padding: 10px 16px; border-bottom: 1px solid #334155; }
+  td { padding: 12px 16px; font-size: 15px; color: #cbd5e1; border-bottom: 1px solid #1e293b; }
+  tr.total td { color: #f8fafc; font-weight: 700; border-top: 1px solid #334155; border-bottom: none; }
+  .slide-cta { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+  .cta-box { background: #0f172a; border: 1px solid #38bdf8; border-radius: 12px; padding: 36px 40px; max-width: 640px; margin-top: 32px; }
+  .cta-box .price { font-size: 44px; font-weight: 800; color: #38bdf8; }
+  .cta-box .price-note { font-size: 14px; color: #64748b; margin-top: 4px; }
+
+  /* Diagram slide */
+  .slide-diagram { padding: 48px 60px; }
+  .diagram-wrap { display: flex; align-items: center; gap: 0; margin-top: 24px; width: 100%; }
+  .diag-panel { flex: 1; border-radius: 12px; padding: 28px; }
+  .diag-panel.as-is { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); }
+  .diag-panel.to-be  { background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.25); }
+  .diag-panel-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 18px; }
+  .diag-panel.as-is .diag-panel-title { color: #f87171; }
+  .diag-panel.to-be  .diag-panel-title { color: #4ade80; }
+  .diag-arrow { width: 80px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  .diag-arrow svg { filter: drop-shadow(0 0 8px #38bdf8); }
+  .diag-arrow span { font-size: 10px; color: #38bdf8; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+
+  /* Node rows */
+  .node-row { display: flex; align-items: stretch; gap: 8px; margin-bottom: 8px; }
+  .node {
+    flex: 1; border-radius: 7px; padding: 10px 14px;
+    font-size: 12px; line-height: 1.4;
+  }
+  .node-label { font-weight: 700; font-size: 12px; margin-bottom: 2px; }
+  .node-sub { font-size: 11px; opacity: 0.75; }
+
+  .node-bad  { background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.3);  color: #fca5a5; }
+  .node-warn { background: rgba(251,191,36,0.10); border: 1px solid rgba(251,191,36,0.3); color: #fde68a; }
+  .node-ok   { background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.3); color: #bbf7d0; }
+  .node-new  { background: rgba(56,189,248,0.10); border: 1px solid rgba(56,189,248,0.35); color: #bae6fd; }
+  .node-neutral { background: #1e293b; border: 1px solid #334155; color: #94a3b8; }
+
+  @keyframes pulse-arrow { 0%,100%{opacity:.7} 50%{opacity:1} }
+  .diag-arrow svg { animation: pulse-arrow 2s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide slide-title">
+    <div class="slide-number">1 / 13</div>
+    <div class="rfp-badge">RFP #MC-2026-0417</div>
+    <h1>Modernising the<br><span class="accent">Meridian Components</span><br>Inventory Dashboard</h1>
+    <div class="divider"></div>
+    <div class="sub">Capabilities Presentation · April 28, 2026</div>
+  </div>
+
+  <!-- SLIDE 2: The situation -->
+  <div class="slide">
+    <div class="slide-number">2 / 13</div>
+    <div class="label">The Situation</div>
+    <h2>You have a working system.<br>A previous vendor left it <span class="red">unfinished.</span></h2>
+    <div class="divider"></div>
+    <p class="lead">We read the codebase before submitting this proposal. Here is what we found — not what the previous vendor's handoff notes say.</p>
+    <div class="ps-grid" style="margin-top: 32px;">
+      <div class="ps-col">
+        <h4 style="color:#f87171;">What's broken</h4>
+        <ul>
+          <li>⚠ Reports module — known defects, no i18n, debug logs in production</li>
+          <li>✗ Restocking feature — not built at all</li>
+          <li>✗ No automated tests — IT has blocked all changes</li>
+          <li>✗ No architecture documentation — onboarding from scratch</li>
+          <li>⚠ Tokyo staff working in English-only views</li>
+        </ul>
+      </div>
+      <div class="ps-col">
+        <h4 style="color:#4ade80;">What's solid</h4>
+        <ul>
+          <li>✓ Vue 3 + FastAPI foundation is sound</li>
+          <li>✓ 16 REST endpoints, clean data models</li>
+          <li>✓ i18n composable + locale files already exist</li>
+          <li>✓ 51 backend tests passing</li>
+          <li>✓ Design token system in place</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: System Transformation Diagram -->
+  <div class="slide slide-diagram">
+    <div class="slide-number">3 / 13</div>
+    <div class="label">System Transformation</div>
+    <h2>Where we start. Where we finish.</h2>
+    <div class="divider"></div>
+
+    <div class="diagram-wrap">
+
+      <!-- AS-IS panel -->
+      <div class="diag-panel as-is">
+        <div class="diag-panel-title">⚠ As-Is — Inherited</div>
+
+        <div class="node-row">
+          <div class="node node-neutral">
+            <div class="node-label">Browser</div>
+            <div class="node-sub">SF · London · Tokyo</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-neutral" style="flex:2">
+            <div class="node-label">Vue 3 · port 3000</div>
+            <div class="node-sub">6 views functional</div>
+          </div>
+          <div class="node node-bad">
+            <div class="node-label">Reports.vue</div>
+            <div class="node-sub">⚠ defects · no i18n</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-bad">
+            <div class="node-label">✗ Restocking</div>
+            <div class="node-sub">not built</div>
+          </div>
+          <div class="node node-warn">
+            <div class="node-label">useI18n()</div>
+            <div class="node-sub">en ✓ · ja ⚠ partial</div>
+          </div>
+          <div class="node node-bad">
+            <div class="node-label">✗ Browser tests</div>
+            <div class="node-sub">IT blocks changes</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-neutral" style="flex:1">
+            <div class="node-label">api.js → FastAPI</div>
+            <div class="node-sub">16 endpoints · port 8001</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-neutral">
+            <div class="node-label">server/data/*.json</div>
+            <div class="node-sub">inventory · orders · demand · spending</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-warn">
+            <div class="node-label">51 backend tests</div>
+            <div class="node-sub">pytest only · no E2E</div>
+          </div>
+          <div class="node node-bad">
+            <div class="node-label">✗ Architecture docs</div>
+            <div class="node-sub">no documentation</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="diag-arrow">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="22" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+          <path d="M16 24 H32 M26 18 L32 24 L26 30" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>8 wks</span>
+      </div>
+
+      <!-- TO-BE panel -->
+      <div class="diag-panel to-be">
+        <div class="diag-panel-title">✓ To-Be — Delivered</div>
+
+        <div class="node-row">
+          <div class="node node-neutral">
+            <div class="node-label">Browser</div>
+            <div class="node-sub">SF · London · <span style="color:#4ade80;">Tokyo 日本語 ✓</span></div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-ok" style="flex:2">
+            <div class="node-label">Vue 3 · port 3000</div>
+            <div class="node-sub">7 views · all functional</div>
+          </div>
+          <div class="node node-ok">
+            <div class="node-label">Reports.vue ✓</div>
+            <div class="node-sub">all defects resolved</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-new">
+            <div class="node-label">✦ RestockingView</div>
+            <div class="node-sub">new · budget-aware</div>
+          </div>
+          <div class="node node-ok">
+            <div class="node-label">useI18n()</div>
+            <div class="node-sub">en ✓ · ja ✓ full</div>
+          </div>
+          <div class="node node-ok">
+            <div class="node-label">✓ Playwright E2E</div>
+            <div class="node-sub">IT gate unblocked</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-neutral">
+            <div class="node-label">api.js → FastAPI</div>
+            <div class="node-sub">16 + 1 endpoints · port 8001</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-neutral">
+            <div class="node-label">server/data/*.json</div>
+            <div class="node-sub">inventory · orders · demand · spending</div>
+          </div>
+        </div>
+
+        <div class="node-row">
+          <div class="node node-ok">
+            <div class="node-label">51 backend + E2E</div>
+            <div class="node-sub">pytest + Playwright</div>
+          </div>
+          <div class="node node-ok">
+            <div class="node-label">✓ Architecture docs</div>
+            <div class="node-sub">handoff-ready for IT</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Our approach -->
+  <div class="slide">
+    <div class="slide-number">4 / 13</div>
+    <div class="label">Our Approach</div>
+    <h2>Stabilise. Unlock. Build. Enhance.</h2>
+    <div class="divider"></div>
+    <p>We work in dependency order — not requirement order. You can't safely build new features on a broken, untested foundation.</p>
+    <div class="two-col" style="margin-top: 32px;">
+      <div class="card highlight">
+        <div class="tag tag-req">Phase 1</div>
+        <h3>Stabilise</h3>
+        <p>Fix all Reports defects (R1). Document the architecture for IT (R4). These run in week 1–2 while the rest of the team ramps.</p>
+      </div>
+      <div class="card amber-border">
+        <div class="tag tag-req">Phase 2</div>
+        <h3>Unlock</h3>
+        <p>Establish Playwright end-to-end test coverage (R3). This is IT's gate — nothing else gets approved without it. Tests are written as we fix.</p>
+      </div>
+      <div class="card green-border">
+        <div class="tag tag-new">Phase 3</div>
+        <h3>Build</h3>
+        <p>Deliver the Restocking view (R2) — new backend endpoint + frontend — on a verified, tested foundation. The right order matters.</p>
+      </div>
+      <div class="card purple-border">
+        <div class="tag tag-desired">Phase 4</div>
+        <h3>Enhance</h3>
+        <p>UI refresh (D1), full Japanese i18n (D2), dark mode (D3) — parallel workstreams. Done alongside Build; do not block the required delivery.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: R1 Reports -->
+  <div class="slide">
+    <div class="slide-number">5 / 13</div>
+    <div class="label">Requirement R1</div>
+    <h2>Reports Module Remediation</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <p class="lead">We found the defects ourselves. We didn't wait for a bug list.</p>
+        <ul style="list-style:none; margin-top:24px;">
+          <li style="padding:10px 0; border-bottom:1px solid #1e293b; font-size:15px; color:#94a3b8;">No i18n — all text hardcoded, existing composable unused</li>
+          <li style="padding:10px 0; border-bottom:1px solid #1e293b; font-size:15px; color:#94a3b8;">Manual formatters duplicating locale utilities</li>
+          <li style="padding:10px 0; border-bottom:1px solid #1e293b; font-size:15px; color:#94a3b8;">Debug <code style="background:#1e293b; padding:1px 5px; border-radius:3px; color:#f87171;">console.log()</code> calls in production</li>
+          <li style="padding:10px 0; border-bottom:1px solid #1e293b; font-size:15px; color:#94a3b8;">No error retry on failed data load</li>
+          <li style="padding:10px 0; font-size:15px; color:#94a3b8;">Calculation logic inline in view — fragile, untestable</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="green">Approach</h3>
+        <p style="margin-top:12px;">Full defect audit → fix by category → wire existing <code style="background:#0f172a; padding:1px 5px; border-radius:3px; color:#38bdf8;">useI18n()</code> composable → replace manual formatters → extract computed logic → verify against live endpoints.</p>
+        <p style="margin-top:16px;">No new infrastructure. Everything we need is already in the codebase.</p>
+        <div style="margin-top:20px; padding:14px; background:#0f172a; border-radius:6px;">
+          <div style="font-size:12px; color:#64748b; margin-bottom:4px;">MILESTONE</div>
+          <div style="font-size:14px; color:#fbbf24; font-weight:600;">M1 — End of week 2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: R2 Restocking -->
+  <div class="slide">
+    <div class="slide-number">6 / 13</div>
+    <div class="label">Requirement R2</div>
+    <h2>Restocking Recommendations</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <p>The feature doesn't exist yet — but most of the data does. Inventory levels, demand forecasts, and purchase order models are already in the backend. We wire them together.</p>
+        <div class="card" style="margin-top:24px;">
+          <h3 class="accent">New: <code style="font-size:16px;">/api/restocking</code></h3>
+          <p style="margin-top:8px;">Accepts warehouse filter + budget ceiling. Cross-references stock vs. demand threshold. Returns ranked purchase order recommendations within budget.</p>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <h3 class="accent">New: <code style="font-size:16px;">RestockingView.vue</code></h3>
+          <p style="margin-top:8px;">Warehouse selector, budget ceiling input, recommendations table, running total indicator. Wired into router and nav.</p>
+        </div>
+      </div>
+      <div>
+        <div style="background:#1e293b; border-radius:10px; padding:24px; height:100%;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#64748b; margin-bottom:16px;">Logic model</div>
+          <div style="font-size:14px; color:#94a3b8; line-height:2;">
+            <span style="color:#38bdf8;">inventory stock</span> → below reorder threshold?<br>
+            <span style="color:#38bdf8;">demand forecast</span> → how much is needed?<br>
+            <span style="color:#38bdf8;">budget ceiling</span> → what fits?<br>
+            <span style="color:#38bdf8;">unit cost</span> × recommended qty<br>
+            ↓<br>
+            <span style="color:#4ade80; font-weight:600;">Ranked purchase order recommendations</span>
+          </div>
+          <div style="margin-top:24px; padding:14px; background:#0f172a; border-radius:6px;">
+            <div style="font-size:12px; color:#64748b; margin-bottom:4px;">MILESTONE</div>
+            <div style="font-size:14px; color:#818cf8; font-weight:600;">M3 — End of week 6</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: R3 Testing -->
+  <div class="slide">
+    <div class="slide-number">7 / 13</div>
+    <div class="label">Requirement R3</div>
+    <h2>Automated Browser Testing</h2>
+    <div class="divider"></div>
+    <p class="lead">This is the key that unlocks everything. IT cannot approve changes without it. We treat it as foundational, not a nice-to-have.</p>
+    <div class="three-col" style="margin-top:32px;">
+      <div class="card">
+        <div style="font-size:28px; margin-bottom:12px;">🔍</div>
+        <h3>Current state</h3>
+        <p>51 backend tests exist (pytest). <span class="red">Zero</span> frontend or E2E tests. IT has blocked all production changes for this reason.</p>
+      </div>
+      <div class="card highlight">
+        <div style="font-size:28px; margin-bottom:12px;">🎭</div>
+        <h3>Playwright E2E suite</h3>
+        <p>Tests written alongside R1 + R2 as they stabilise. 5 critical flows covered — dashboard, inventory, reports, restocking, i18n toggle.</p>
+      </div>
+      <div class="card green-border">
+        <div style="font-size:28px; margin-bottom:12px;">✓</div>
+        <h3>IT approval gate</h3>
+        <p>Suite runs against local dev server. Repeatable in CI. Once passing, IT has a verified gate for approving all future changes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: R4 + Desired -->
+  <div class="slide">
+    <div class="slide-number">8 / 13</div>
+    <div class="label">R4 + Desired Items</div>
+    <h2>Architecture Docs, i18n, UI & Dark Mode</h2>
+    <div class="divider"></div>
+    <div class="two-col">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="tag tag-req">R4</div>
+          <h3>Architecture documentation</h3>
+          <p>Visual HTML overview — view map, 16 API endpoints, data flow, i18n system. Produced during onboarding. Handoff-ready for Meridian IT.</p>
+        </div>
+        <div class="card">
+          <div class="tag tag-desired">D2</div>
+          <h3>Full i18n — Japanese</h3>
+          <p>The composable and locale files already exist. Reports and remaining views are missing <code style="background:#0f172a; padding:1px 5px; border-radius:3px; font-size:13px;">t()</code> calls. We audit and complete the coverage. Tokyo staff get a native-language UI.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="tag tag-desired">D1</div>
+          <h3>UI modernisation</h3>
+          <p>Refresh using the existing design token system — typography, spacing, component consistency. No library swap. Cleaner, not different.</p>
+        </div>
+        <div class="card">
+          <div class="tag tag-desired">D3</div>
+          <h3>Dark mode</h3>
+          <p>CSS variable swap on a <code style="background:#0f172a; padding:1px 5px; border-radius:3px; font-size:13px;">data-theme</code> attribute. Operator-selectable. Persisted in localStorage. Built for warehouse floor stations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Timeline -->
+  <div class="slide">
+    <div class="slide-number">9 / 13</div>
+    <div class="label">Delivery Timeline</div>
+    <h2>8 weeks from contract execution</h2>
+    <div class="divider"></div>
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="tl-week">Weeks 1–2</div>
+        <div class="tl-bar m1">
+          <div class="tl-title">M1 — Stabilise <span style="color:#fbbf24;">●</span></div>
+          <div class="tl-detail">R4 architecture docs · R1 full defect audit · Architect onboarding</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-week">Weeks 2–4</div>
+        <div class="tl-bar m2">
+          <div class="tl-title">M2 — Unlock <span style="color:#f87171;">●</span></div>
+          <div class="tl-detail">R1 all defects resolved · R2 backend endpoint live · R3 Playwright in progress · Frontend ramps</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-week">Weeks 4–6</div>
+        <div class="tl-bar m3">
+          <div class="tl-title">M3 — Build complete <span style="color:#818cf8;">●</span></div>
+          <div class="tl-detail">R2 Restocking view shipped · R3 full test suite passing · D1/D2/D3 complete</div>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-week">Weeks 7–8</div>
+        <div class="tl-bar m4">
+          <div class="tl-title">M4 — Final delivery <span style="color:#4ade80;">●</span></div>
+          <div class="tl-detail">Integration · client review · handoff package · sign-off</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:24px; font-size:14px; color:#475569;">Required items (R1–R4) complete before desired items ship. Desired items are parallel, non-blocking.</p>
+  </div>
+
+  <!-- SLIDE 10: Team -->
+  <div class="slide">
+    <div class="slide-number">10 / 13</div>
+    <div class="label">Our Team</div>
+    <h2>The people in this proposal<br>are the people doing the work.</h2>
+    <div class="divider"></div>
+    <div class="three-col" style="margin-top:8px;">
+      <div class="card highlight">
+        <div style="font-size:13px; font-weight:700; color:#38bdf8; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px;">Architect / Full-stack</div>
+        <p>Technical lead throughout all 8 weeks. Owns onboarding, architecture docs, backend delivery, integration, and handoff.</p>
+        <div style="margin-top:16px; font-size:13px; color:#64748b;">Weeks 1–8 · 100%</div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px; font-weight:700; color:#94a3b8; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px;">Frontend Engineer</div>
+        <p>Restocking UI, UI modernisation, i18n completion, dark mode. Ramps in week 2, full build from week 3, wraps end of week 7.</p>
+        <div style="margin-top:16px; font-size:13px; color:#64748b;">Weeks 2–7 · released wk 8</div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px; font-weight:700; color:#94a3b8; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px;">QA / Test Engineer</div>
+        <p>Playwright test suite, regression coverage. Ramps week 3, full from week 4, 50% sign-off support in final week.</p>
+        <div style="margin-top:16px; font-size:13px; color:#64748b;">Weeks 3–8 · 50% wk 8</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Experience -->
+  <div class="slide">
+    <div class="slide-number">11 / 13</div>
+    <div class="label">Relevant Experience</div>
+    <h2>We have done this before.<br>Specifically this.</h2>
+    <div class="divider"></div>
+    <div class="three-col">
+      <div class="card">
+        <div style="font-size:12px; color:#64748b; margin-bottom:8px;">FORTIS DISTRIBUTION GROUP</div>
+        <h3>Vendor exit remediation</h3>
+        <p style="margin-top:8px;">Inherited an incomplete Vue/FastAPI dashboard. 22 defects resolved. New purchase recommendation feature. Playwright suite. IT unblocked in sprint 1.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:12px; color:#64748b; margin-bottom:8px;">KESSLER COMPONENTS</div>
+        <h3>i18n + dark mode rollout</h3>
+        <p style="margin-top:8px;">English-only dashboard for Frankfurt, Singapore, and Osaka teams. Japanese and German i18n. Dark mode for warehouse floor stations. Zero regressions.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:12px; color:#64748b; margin-bottom:8px;">NAVARO LOGISTICS</div>
+        <h3>Test coverage from zero</h3>
+        <p style="margin-top:8px;">IT had blocked changes for 5 months. 47 Playwright tests, CI integration, runbook. IT unblocked within 2 weeks. Engagement extended.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Pricing -->
+  <div class="slide">
+    <div class="slide-number">12 / 13</div>
+    <div class="label">Pricing</div>
+    <h2>Fixed fee. Right-sized team.<br>Full scope.</h2>
+    <div class="divider"></div>
+    <div class="two-col" style="align-items:start;">
+      <div>
+        <table>
+          <thead><tr><th>Role</th><th>Weeks</th><th>Hours</th><th>Subtotal</th></tr></thead>
+          <tbody>
+            <tr><td>Architect / Full-stack</td><td>1–8 · 100%</td><td>320 hrs</td><td>$56,000</td></tr>
+            <tr><td>Frontend Engineer</td><td>2–7 · right-sized</td><td>200 hrs</td><td>$28,000</td></tr>
+            <tr><td>QA / Test Engineer</td><td>3–8 · right-sized</td><td>200 hrs</td><td>$23,000</td></tr>
+            <tr class="total"><td colspan="2">Fixed fee (NTE)</td><td>720 hrs</td><td class="accent">$112,000</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:13px; margin-top:16px; color:#64748b;">Architect full-time throughout. Supporting roles release when their phase is done — saving vs. three people full-time for 8 weeks.</p>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <h3 style="font-size:16px; margin-bottom:12px;">Payment milestones</h3>
+          <div style="font-size:14px; color:#94a3b8; line-height:2.2;">
+            <span style="color:#e2e8f0;">30%</span> · M0 — Contract execution<br>
+            <span style="color:#e2e8f0;">40%</span> · M2 — R1 + R3 sign-off<br>
+            <span style="color:#e2e8f0;">30%</span> · M4 — Final delivery accepted
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:16px; margin-bottom:12px;">All required + desired included</h3>
+          <div style="font-size:13px; color:#94a3b8; line-height:2;">
+            R1 Reports remediation &nbsp;✓<br>
+            R2 Restocking view &nbsp;✓<br>
+            R3 Playwright E2E tests &nbsp;✓<br>
+            R4 Architecture docs &nbsp;✓<br>
+            D1 UI · D2 i18n · D3 Dark mode &nbsp;✓
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:20px; font-size:13px; color:#475569;">Payment tied to deliverable acceptance, not calendar dates.</p>
+  </div>
+
+  <!-- SLIDE 13: CTA -->
+  <div class="slide slide-cta">
+    <div class="slide-number">13 / 13</div>
+    <div class="label">Next Steps</div>
+    <h2>We're ready to start<br>as soon as you are.</h2>
+    <div class="divider"></div>
+    <p class="lead">The codebase is already familiar. The team is available. The proposal is on the table.</p>
+    <div class="cta-box">
+      <div style="font-size:13px; color:#64748b; margin-bottom:4px;">FIXED FEE — NOT TO EXCEED</div>
+      <div class="price">$112,000</div>
+      <div class="price-note">8 weeks · Full scope R1–R4 + D1–D3 · 3-person team</div>
+      <div style="margin-top:24px; display:flex; gap:32px;">
+        <div>
+          <div style="font-size:12px; color:#64748b; margin-bottom:4px;">RESPONSE DUE</div>
+          <div style="font-size:16px; font-weight:600; color:#e2e8f0;">May 8, 2026</div>
+        </div>
+        <div>
+          <div style="font-size:12px; color:#64748b; margin-bottom:4px;">QUESTIONS TO</div>
+          <div style="font-size:16px; font-weight:600; color:#e2e8f0;">procurement@meridiancomponents.example</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

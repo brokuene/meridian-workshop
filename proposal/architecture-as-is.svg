@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="960" height="580" font-family="'Segoe UI', Arial, sans-serif">
+  <!-- Background -->
+  <rect width="960" height="580" fill="#f8fafc" rx="8"/>
+
+  <!-- Title -->
+  <text x="480" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Meridian Components — Current State Architecture</text>
+  <text x="480" y="56" text-anchor="middle" font-size="12" fill="#64748b">As-Is · Inherited from previous vendor</text>
+
+  <!-- ── USERS ── -->
+  <rect x="30" y="90" width="130" height="390" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="95" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">USERS</text>
+
+  <rect x="46" y="124" width="98" height="52" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1" rx="6"/>
+  <text x="95" y="144" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">San Francisco</text>
+  <text x="95" y="160" text-anchor="middle" font-size="10" fill="#64748b">HQ / Primary</text>
+  <text x="95" y="173" text-anchor="middle" font-size="10" fill="#64748b">warehouse</text>
+
+  <rect x="46" y="188" width="98" height="52" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1" rx="6"/>
+  <text x="95" y="208" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">London</text>
+  <text x="95" y="224" text-anchor="middle" font-size="10" fill="#64748b">EMEA</text>
+  <text x="95" y="237" text-anchor="middle" font-size="10" fill="#64748b">warehouse</text>
+
+  <rect x="46" y="252" width="98" height="52" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1" rx="6"/>
+  <text x="95" y="272" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">Tokyo</text>
+  <text x="95" y="288" text-anchor="middle" font-size="10" fill="#64748b">APAC</text>
+  <text x="95" y="301" text-anchor="middle" font-size="10" fill="#64748b">English-only ⚠</text>
+
+  <!-- ── FRONTEND ── -->
+  <rect x="220" y="90" width="280" height="390" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" rx="8"/>
+  <text x="360" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#1d4ed8">FRONTEND — Vue 3 + Vite · port 3000</text>
+
+  <!-- Views -->
+  <rect x="236" y="124" width="248" height="200" fill="#dbeafe" stroke="#93c5fd" stroke-width="1" rx="6"/>
+  <text x="360" y="142" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">Views (client/src/views/)</text>
+
+  <rect x="246" y="152" width="104" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="298" y="170" text-anchor="middle" font-size="10" fill="#1e293b">Dashboard.vue</text>
+
+  <rect x="370" y="152" width="104" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="422" y="170" text-anchor="middle" font-size="10" fill="#1e293b">Inventory.vue</text>
+
+  <rect x="246" y="190" width="104" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="298" y="208" text-anchor="middle" font-size="10" fill="#1e293b">Orders.vue</text>
+
+  <rect x="370" y="190" width="104" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="422" y="208" text-anchor="middle" font-size="10" fill="#1e293b">Demand.vue</text>
+
+  <rect x="246" y="228" width="104" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="298" y="246" text-anchor="middle" font-size="10" fill="#1e293b">Spending.vue</text>
+
+  <rect x="370" y="228" width="104" height="28" fill="#ffffff" stroke="#93c5fd" stroke-width="1" rx="4"/>
+  <text x="422" y="246" text-anchor="middle" font-size="10" fill="#1e293b">Backlog.vue</text>
+
+  <!-- Reports broken -->
+  <rect x="246" y="266" width="228" height="48" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.5" rx="4"/>
+  <text x="360" y="285" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">⚠ Reports.vue</text>
+  <text x="360" y="302" text-anchor="middle" font-size="9" fill="#b91c1c">Known defects · no i18n · debug logs</text>
+
+  <!-- api.js -->
+  <rect x="236" y="340" width="248" height="36" fill="#bfdbfe" stroke="#60a5fa" stroke-width="1" rx="6"/>
+  <text x="360" y="362" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">api.js — HTTP client</text>
+
+  <!-- i18n partial -->
+  <rect x="236" y="390" width="110" height="44" fill="#fef9c3" stroke="#fde047" stroke-width="1.5" rx="6"/>
+  <text x="291" y="408" text-anchor="middle" font-size="10" font-weight="600" fill="#92400e">useI18n()</text>
+  <text x="291" y="423" text-anchor="middle" font-size="9" fill="#a16207">en.js ✓  ja.js ⚠</text>
+  <text x="291" y="434" text-anchor="middle" font-size="9" fill="#a16207">partial coverage</text>
+
+  <!-- No tests badge -->
+  <rect x="364" y="390" width="120" height="44" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.5" rx="6"/>
+  <text x="424" y="410" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">✗ No browser tests</text>
+  <text x="424" y="426" text-anchor="middle" font-size="9" fill="#b91c1c">IT blocks all changes</text>
+
+  <!-- ── ARROWS users → frontend ── -->
+  <line x1="160" y1="290" x2="218" y2="290" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="189" y="284" text-anchor="middle" font-size="9" fill="#64748b">HTTP</text>
+
+  <!-- ── BACKEND ── -->
+  <rect x="560" y="90" width="260" height="300" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" rx="8"/>
+  <text x="690" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#15803d">BACKEND — FastAPI · port 8001</text>
+
+  <!-- Endpoints -->
+  <rect x="576" y="124" width="228" height="180" fill="#dcfce7" stroke="#86efac" stroke-width="1" rx="6"/>
+  <text x="690" y="142" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">16 REST Endpoints</text>
+  <text x="690" y="160" text-anchor="middle" font-size="9" fill="#166534">GET /api/inventory · /api/orders</text>
+  <text x="690" y="176" text-anchor="middle" font-size="9" fill="#166534">GET /api/dashboard/summary</text>
+  <text x="690" y="192" text-anchor="middle" font-size="9" fill="#166534">GET /api/demand · /api/backlog</text>
+  <text x="690" y="208" text-anchor="middle" font-size="9" fill="#166534">GET /api/reports/quarterly</text>
+  <text x="690" y="224" text-anchor="middle" font-size="9" fill="#166534">GET /api/reports/monthly-trends</text>
+  <text x="690" y="240" text-anchor="middle" font-size="9" fill="#166534">GET /api/spending/*</text>
+  <text x="690" y="260" text-anchor="middle" font-size="9" font-style="italic" fill="#dc2626">✗ No /api/restocking</text>
+  <text x="690" y="278" text-anchor="middle" font-size="9" font-style="italic" fill="#dc2626">✗ No /api/restocking</text>
+  <text x="690" y="293" text-anchor="middle" font-size="9" fill="#166534">mock_data.py</text>
+
+  <!-- Data files -->
+  <rect x="576" y="316" width="228" height="54" fill="#bbf7d0" stroke="#86efac" stroke-width="1" rx="6"/>
+  <text x="690" y="336" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">server/data/*.json</text>
+  <text x="690" y="352" text-anchor="middle" font-size="9" fill="#166534">inventory · orders · demand</text>
+  <text x="690" y="366" text-anchor="middle" font-size="9" fill="#166534">backlog · spending · suppliers</text>
+
+  <!-- Arrow api.js → backend -->
+  <line x1="486" y1="358" x2="558" y2="290" stroke="#60a5fa" stroke-width="1.5" marker-end="url(#arrowblue)"/>
+  <text x="520" y="318" text-anchor="middle" font-size="9" fill="#3b82f6">HTTP/REST</text>
+
+  <!-- ── BACKEND TESTS ── -->
+  <rect x="560" y="406" width="260" height="64" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" rx="8"/>
+  <text x="690" y="426" text-anchor="middle" font-size="10" font-weight="600" fill="#15803d">Backend Tests (pytest)</text>
+  <text x="690" y="444" text-anchor="middle" font-size="9" fill="#166534">51 tests · tests/backend/</text>
+  <text x="690" y="460" text-anchor="middle" font-size="9" fill="#166534">inventory · orders · dashboard · misc</text>
+
+  <!-- ── MISSING: Restocking ── -->
+  <rect x="220" y="500" width="600" height="56" fill="#fef2f2" stroke="#fca5a5" stroke-width="2" rx="8" stroke-dasharray="6,3"/>
+  <text x="520" y="522" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">✗ Restocking feature does not exist</text>
+  <text x="520" y="542" text-anchor="middle" font-size="10" fill="#b91c1c">No view · No endpoint · No purchase order recommendation logic</text>
+
+  <!-- Arrow defs -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrowblue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#60a5fa"/>
+    </marker>
+  </defs>
+</svg>
