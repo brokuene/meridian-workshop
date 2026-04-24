@@ -70,6 +70,14 @@ export const api = {
     return response.data
   },
 
+  async getRestockingRecommendations(filters = {}) {
+    const params = new URLSearchParams()
+    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
+    if (filters.budget) params.append('budget', filters.budget)
+    const response = await axios.get(`${API_BASE_URL}/restocking?${params.toString()}`)
+    return response.data
+  },
+
   async getSpendingSummary() {
     const response = await axios.get(`${API_BASE_URL}/spending/summary`)
     return response.data

@@ -120,6 +120,21 @@ class CreatePurchaseOrderRequest(BaseModel):
     expected_delivery_date: str
     notes: Optional[str] = None
 
+class RestockRecommendation(BaseModel):
+    item_sku: str
+    item_name: str
+    category: str
+    warehouse: str
+    quantity_to_order: int
+    unit_cost: float
+    total_cost: float
+    current_stock: int
+    reorder_point: int
+    forecasted_demand: int
+    demand_trend: str
+    priority: str
+    reason: str
+
 # API endpoints
 @app.get("/")
 def root():
@@ -314,6 +329,80 @@ def get_monthly_trends(warehouse: Optional[str] = None, category: Optional[str] 
     result = list(months.values())
     result.sort(key=lambda x: x['month'])
     return result
+
+@app.get("/api/restocking", response_model=List[RestockRecommendation])
+def get_restocking_recommendations(
+    warehouse: Optional[str] = None,
+    budget: Optional[float] = None
+):
+    """Get restocking recommendations based on stock levels, demand forecasts, and budget ceiling."""
+    filtered_inventory = inventory_items
+    if warehouse and warehouse != 'all':
+        filtered_inventory = [i for i in filtered_inventory if i.get('warehouse') == warehouse]
+
+    demand_map = {d['item_sku']: d for d in demand_forecasts}
+    backlog_map = {b['item_sku']: b for b in backlog_items}
+
+    priority_order = {'critical': 0, 'high': 1, 'medium': 2, 'low': 3}
+
+    candidates = []
+    for item in filtered_inventory:
+        sku = item['sku']
+        qty = item.get('quantity_on_hand', 0)
+        reorder = item.get('reorder_point', 0)
+        unit_cost = item.get('unit_cost', 0)
+        demand = demand_map.get(sku, {})
+        backlog = backlog_map.get(sku)
+        forecasted = demand.get('forecasted_demand', 0)
+        trend = demand.get('trend', 'stable')
+
+        needs_restock = qty <= reorder or (forecasted and qty < forecasted)
+        if not needs_restock:
+            continue
+
+        qty_to_order = max(reorder * 2 - qty, forecasted - qty if forecasted else 0, 1)
+        total_cost = round(qty_to_order * unit_cost, 2)
+
+        if backlog and backlog.get('priority') == 'high':
+            priority = 'critical'
+            reason = 'backlog_critical'
+        elif backlog and backlog.get('priority') == 'medium':
+            priority = 'high'
+            reason = 'backlog_critical'
+        elif forecasted and qty < forecasted:
+            priority = 'medium'
+            reason = 'demand_spike'
+        else:
+            priority = 'low'
+            reason = 'low_stock'
+
+        candidates.append({
+            'item_sku': sku,
+            'item_name': item.get('name', ''),
+            'category': item.get('category', ''),
+            'warehouse': item.get('warehouse', ''),
+            'quantity_to_order': qty_to_order,
+            'unit_cost': unit_cost,
+            'total_cost': total_cost,
+            'current_stock': qty,
+            'reorder_point': reorder,
+            'forecasted_demand': forecasted,
+            'demand_trend': trend,
+            'priority': priority,
+            'reason': reason,
+        })
+
+    candidates.sort(key=lambda x: (priority_order[x['priority']], x['total_cost']))
+
+    if budget is not None:
+        result, running = [], 0.0
+        for c in candidates:
+            if running + c['total_cost'] <= budget:
+                result.append(c)
+                running += c['total_cost']
+        return result
+
+    return candidates
 
 if __name__ == "__main__":
     import uvicorn
