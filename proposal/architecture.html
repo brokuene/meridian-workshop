@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Components — System Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8fafc; color: #1e293b; font-size: 14px; line-height: 1.6;
+  }
+  .page { max-width: 1100px; margin: 0 auto; padding: 48px 40px; }
+
+  /* Header */
+  .doc-header {
+    border-bottom: 2px solid #e2e8f0; padding-bottom: 32px; margin-bottom: 48px;
+  }
+  .doc-header .tag {
+    display: inline-block; background: #eff6ff; color: #2563eb;
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 4px; margin-bottom: 12px;
+  }
+  .doc-header h1 {
+    font-size: 32px; font-weight: 800; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 8px;
+  }
+  .doc-header p { color: #64748b; font-size: 15px; }
+  .meta { display: flex; gap: 32px; margin-top: 20px; }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; }
+  .meta-value { font-size: 13px; font-weight: 600; color: #475569; }
+
+  /* Section */
+  h2 {
+    font-size: 19px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em;
+    margin: 48px 0 20px; padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px;
+  }
+  h2 .num {
+    background: #1e293b; color: white; font-size: 11px; font-weight: 700;
+    width: 22px; height: 22px; border-radius: 50%; display: inline-flex;
+    align-items: center; justify-content: center;
+  }
+  h3 { font-size: 14px; font-weight: 700; color: #334155; margin: 24px 0 10px; }
+  p { color: #475569; margin-bottom: 12px; }
+
+  /* Diagram container */
+  .diagram-wrap {
+    background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+    padding: 32px; margin: 20px 0 32px; overflow-x: auto;
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: #f1f5f9; text-align: left; padding: 9px 12px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: #64748b; border-bottom: 2px solid #e2e8f0;
+  }
+  tbody td {
+    padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #f8fafc; }
+  .table-wrap {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    overflow: hidden; margin: 12px 0 28px;
+  }
+
+  /* Code / mono */
+  code {
+    font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 12px; background: #f1f5f9; color: #0f172a;
+    padding: 2px 5px; border-radius: 4px;
+  }
+  .method { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+  .get { background: #dcfce7; color: #166534; }
+  .post { background: #dbeafe; color: #1e40af; }
+
+  /* Badges */
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+    border-radius: 4px; white-space: nowrap;
+  }
+  .badge-blue { background: #eff6ff; color: #2563eb; }
+  .badge-green { background: #f0fdf4; color: #16a34a; }
+  .badge-amber { background: #fffbeb; color: #b45309; }
+  .badge-slate { background: #f1f5f9; color: #475569; }
+  .badge-red { background: #fef2f2; color: #dc2626; }
+
+  /* Call-out box */
+  .callout {
+    background: #fffbeb; border: 1px solid #fed7aa; border-radius: 8px;
+    padding: 14px 16px; margin: 16px 0; color: #78350f; font-size: 13px;
+  }
+  .callout strong { color: #92400e; }
+
+  /* Legend items */
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748b; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  /* Two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 12px 0 28px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px;
+  }
+  .card-title { font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; color: #94a3b8; margin-bottom: 12px; }
+
+  /* Endpoint group */
+  .endpoint-group { margin-bottom: 6px; }
+  .endpoint-row { display: flex; align-items: baseline; gap: 10px; padding: 6px 0;
+    border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .endpoint-row:last-child { border-bottom: none; }
+  .ep-path { font-family: monospace; font-size: 12px; color: #1e293b; flex: 1; }
+  .ep-note { color: #64748b; font-size: 12px; }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .page { padding: 24px; max-width: 100%; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ─── Header ─── -->
+<div class="doc-header">
+  <div class="tag">Architecture Handoff · R4</div>
+  <h1>Meridian Components<br>Inventory Management System</h1>
+  <p>Current-state technical architecture — for handoff to Meridian IT</p>
+  <div class="meta">
+    <div class="meta-item">
+      <span class="meta-label">Prepared by</span>
+      <span class="meta-value">Delivery Team</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Engagement</span>
+      <span class="meta-value">MC-2026-0417</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">As of</span>
+      <span class="meta-value">April 2026</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Status</span>
+      <span class="meta-value">Post-delivery</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 1. System Overview ─── -->
+<h2><span class="num">1</span> System Overview</h2>
+
+<p>The system is a two-tier web application: a Vue 3 single-page application served by Vite on port 3000, communicating with a FastAPI Python backend on port 8001 via REST/JSON. All persistent data is loaded from JSON files into memory at startup. There is no database layer in the current deployment.</p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 940 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:940px;display:block;margin:0 auto">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#94a3b8"/>
+    </marker>
+    <marker id="arr2" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8 0,0 3,8 6" fill="#94a3b8"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000015"/>
+    </filter>
+  </defs>
+
+  <!-- Browser -->
+  <rect x="30" y="90" width="160" height="120" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="30" y="90" width="160" height="32" rx="10" fill="#3b82f6"/>
+  <rect x="30" y="110" width="160" height="12" fill="#3b82f6"/>
+  <text x="110" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="white">Browser</text>
+  <text x="110" y="142" text-anchor="middle" font-size="11" fill="#64748b">Vue 3 SPA</text>
+  <text x="110" y="158" text-anchor="middle" font-size="11" fill="#64748b">Vite · Port 3000</text>
+  <text x="110" y="174" text-anchor="middle" font-size="11" fill="#64748b">Vue Router 4</text>
+  <text x="110" y="192" text-anchor="middle" font-size="11" fill="#64748b">Axios HTTP client</text>
+
+  <!-- Arrow Browser→API -->
+  <line x1="192" y1="148" x2="328" y2="148" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4,3"/>
+  <line x1="328" y1="158" x2="192" y2="158" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr2)" stroke-dasharray="4,3"/>
+  <text x="260" y="143" text-anchor="middle" font-size="10" fill="#94a3b8">HTTP/REST</text>
+  <text x="260" y="170" text-anchor="middle" font-size="10" fill="#94a3b8">JSON</text>
+
+  <!-- FastAPI -->
+  <rect x="330" y="70" width="180" height="160" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="330" y="70" width="180" height="32" rx="10" fill="#059669"/>
+  <rect x="330" y="90" width="180" height="12" fill="#059669"/>
+  <text x="420" y="92" text-anchor="middle" font-size="12" font-weight="700" fill="white">FastAPI Backend</text>
+  <text x="420" y="122" text-anchor="middle" font-size="11" fill="#64748b">Python 3.11+</text>
+  <text x="420" y="138" text-anchor="middle" font-size="11" fill="#64748b">FastAPI 0.110+</text>
+  <text x="420" y="154" text-anchor="middle" font-size="11" fill="#64748b">Pydantic v2 models</text>
+  <text x="420" y="170" text-anchor="middle" font-size="11" fill="#64748b">Uvicorn ASGI server</text>
+  <text x="420" y="186" text-anchor="middle" font-size="11" fill="#64748b">Port 8001</text>
+  <text x="420" y="202" text-anchor="middle" font-size="11" fill="#64748b">CORS: all origins</text>
+
+  <!-- Arrow API→Data -->
+  <line x1="512" y1="148" x2="638" y2="148" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="575" y="142" text-anchor="middle" font-size="10" fill="#94a3b8">in-memory</text>
+  <text x="575" y="156" text-anchor="middle" font-size="10" fill="#94a3b8">read-only</text>
+
+  <!-- Data layer -->
+  <rect x="640" y="50" width="270" height="200" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="640" y="50" width="270" height="32" rx="10" fill="#7c3aed"/>
+  <rect x="640" y="70" width="270" height="12" fill="#7c3aed"/>
+  <text x="775" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="white">Data Layer (server/data/)</text>
+
+  <!-- Data files -->
+  <g font-size="11" fill="#64748b">
+    <rect x="656" y="96" width="110" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="711" y="111" text-anchor="middle">inventory.json</text>
+    <rect x="774" y="96" width="120" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="834" y="111" text-anchor="middle">orders.json</text>
+
+    <rect x="656" y="124" width="110" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="711" y="139" text-anchor="middle">demand_forecasts</text>
+    <rect x="774" y="124" width="120" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="834" y="139" text-anchor="middle">backlog_items.json</text>
+
+    <rect x="656" y="152" width="110" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="711" y="167" text-anchor="middle">spending.json</text>
+    <rect x="774" y="152" width="120" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="834" y="167" text-anchor="middle">purchase_orders</text>
+
+    <rect x="656" y="180" width="110" height="22" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="711" y="195" text-anchor="middle">transactions.json</text>
+    <rect x="774" y="180" width="120" height="22" rx="4" fill="#fffbeb" stroke="#fed7aa"/>
+    <text x="834" y="195" fill="#92400e" text-anchor="middle">⚠ In-memory only</text>
+  </g>
+</svg>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Frontend SPA</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#059669"></div> Backend API</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> Data files (JSON, read-only)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fed7aa"></div> No persistence — data is in-memory</div>
+</div>
+</div>
+
+<div class="callout">
+  <strong>Production note:</strong> All data lives in JSON files and is loaded into process memory at startup. There is no database. Any writes (purchase orders, tasks) are lost when the server restarts. A database migration is the recommended first step before production use.
+</div>
+
+<!-- ─── 2. Frontend ─── -->
+<h2><span class="num">2</span> Frontend Architecture</h2>
+
+<p>The frontend is a Vue 3 Composition API application. All pages are single-file components (<code>.vue</code>) in <code>client/src/views/</code>. Shared logic lives in composables. No external UI library is used — charts are hand-built SVG.</p>
+
+<div class="diagram-wrap">
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;display:block;margin:0 auto">
+  <defs>
+    <marker id="a2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0,7 2.5,0 5" fill="#cbd5e1"/>
+    </marker>
+  </defs>
+
+  <!-- App.vue -->
+  <rect x="350" y="10" width="200" height="50" rx="8" fill="#1e293b" stroke="#1e293b"/>
+  <text x="450" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="white">App.vue</text>
+  <text x="450" y="47" text-anchor="middle" font-size="11" fill="#94a3b8">Layout shell · Nav · Modals</text>
+
+  <!-- Router View label -->
+  <text x="450" y="82" text-anchor="middle" font-size="11" fill="#94a3b8">router-view</text>
+  <line x1="450" y1="60" x2="450" y2="88" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- Views row -->
+  <g font-size="11">
+    <!-- Dashboard -->
+    <rect x="20" y="100" width="110" height="50" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="75" y="119" text-anchor="middle" font-weight="700" fill="#1e40af">Dashboard</text>
+    <text x="75" y="134" text-anchor="middle" fill="#3b82f6">/</text>
+    <text x="75" y="146" text-anchor="middle" fill="#64748b">KPIs · Charts</text>
+
+    <!-- Inventory -->
+    <rect x="145" y="100" width="110" height="50" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <text x="200" y="119" text-anchor="middle" font-weight="700" fill="#166534">Inventory</text>
+    <text x="200" y="134" text-anchor="middle" fill="#16a34a">/inventory</text>
+    <text x="200" y="146" text-anchor="middle" fill="#64748b">Stock table</text>
+
+    <!-- Orders -->
+    <rect x="270" y="100" width="110" height="50" rx="6" fill="#fefce8" stroke="#fde68a"/>
+    <text x="325" y="119" text-anchor="middle" font-weight="700" fill="#854d0e">Orders</text>
+    <text x="325" y="134" text-anchor="middle" fill="#d97706">/orders</text>
+    <text x="325" y="146" text-anchor="middle" fill="#64748b">Order list</text>
+
+    <!-- Demand -->
+    <rect x="395" y="100" width="110" height="50" rx="6" fill="#fdf4ff" stroke="#e9d5ff"/>
+    <text x="450" y="119" text-anchor="middle" font-weight="700" fill="#6b21a8">Demand</text>
+    <text x="450" y="134" text-anchor="middle" fill="#9333ea">/demand</text>
+    <text x="450" y="146" text-anchor="middle" fill="#64748b">Forecast</text>
+
+    <!-- Spending -->
+    <rect x="520" y="100" width="110" height="50" rx="6" fill="#fff7ed" stroke="#fed7aa"/>
+    <text x="575" y="119" text-anchor="middle" font-weight="700" fill="#9a3412">Finance</text>
+    <text x="575" y="134" text-anchor="middle" fill="#ea580c">/spending</text>
+    <text x="575" y="146" text-anchor="middle" fill="#64748b">P&amp;L · Spend</text>
+
+    <!-- Reports -->
+    <rect x="645" y="100" width="110" height="50" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="700" y="119" text-anchor="middle" font-weight="700" fill="#334155">Reports</text>
+    <text x="700" y="134" text-anchor="middle" fill="#64748b">/reports</text>
+    <text x="700" y="146" text-anchor="middle" fill="#64748b">Quarterly</text>
+
+    <!-- Restocking -->
+    <rect x="770" y="100" width="110" height="50" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+    <text x="825" y="119" text-anchor="middle" font-weight="700" fill="#991b1b">Restocking</text>
+    <text x="825" y="134" text-anchor="middle" fill="#dc2626">/restocking</text>
+    <text x="825" y="146" text-anchor="middle" fill="#64748b">PO recs</text>
+  </g>
+
+  <!-- Arrows from App to views -->
+  <g stroke="#cbd5e1" stroke-width="1" fill="none">
+    <polyline points="450,88 75,100" marker-end="url(#a2)"/>
+    <polyline points="450,88 200,100" marker-end="url(#a2)"/>
+    <polyline points="450,88 325,100" marker-end="url(#a2)"/>
+    <polyline points="450,88 450,100" marker-end="url(#a2)"/>
+    <polyline points="450,88 575,100" marker-end="url(#a2)"/>
+    <polyline points="450,88 700,100" marker-end="url(#a2)"/>
+    <polyline points="450,88 825,100" marker-end="url(#a2)"/>
+  </g>
+
+  <!-- Shared layer label -->
+  <text x="450" y="192" text-anchor="middle" font-size="11" fill="#94a3b8">shared via composables</text>
+  <line x1="450" y1="150" x2="450" y2="198" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#a2)"/>
+
+  <!-- Composables row -->
+  <g font-size="11">
+    <rect x="170" y="210" width="175" height="62" rx="8" fill="white" stroke="#e2e8f0"/>
+    <text x="257" y="230" text-anchor="middle" font-weight="700" fill="#334155">useFilters()</text>
+    <text x="257" y="247" text-anchor="middle" fill="#64748b">selectedLocation/Category</text>
+    <text x="257" y="261" text-anchor="middle" fill="#64748b">selectedPeriod/Status</text>
+
+    <rect x="362" y="210" width="175" height="62" rx="8" fill="white" stroke="#e2e8f0"/>
+    <text x="449" y="230" text-anchor="middle" font-weight="700" fill="#334155">useI18n()</text>
+    <text x="449" y="247" text-anchor="middle" fill="#64748b">t() · setLocale()</text>
+    <text x="449" y="261" text-anchor="middle" fill="#64748b">translateProductName()</text>
+
+    <rect x="554" y="210" width="175" height="62" rx="8" fill="white" stroke="#e2e8f0"/>
+    <text x="641" y="230" text-anchor="middle" font-weight="700" fill="#334155">useAuth()</text>
+    <text x="641" y="247" text-anchor="middle" fill="#64748b">currentUser · isAuthenticated</text>
+    <text x="641" y="261" text-anchor="middle" fill="#64748b">getInitials() · logout()</text>
+  </g>
+
+  <!-- API.js box -->
+  <rect x="262" y="310" width="375" height="50" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="449" y="330" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">api.js</text>
+  <text x="449" y="348" text-anchor="middle" font-size="11" fill="#64748b">Centralized HTTP client · Axios · URLSearchParams filter builder</text>
+
+  <!-- Arrow composables → api.js -->
+  <line x1="449" y1="272" x2="449" y2="310" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#a2)"/>
+
+  <!-- FilterBar -->
+  <rect x="10" y="310" width="175" height="50" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="97" y="330" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">FilterBar.vue</text>
+  <text x="97" y="348" text-anchor="middle" font-size="11" fill="#64748b">Sticky top bar · 4 selects</text>
+  <line x1="257" y1="272" x2="97" y2="310" stroke="#bfdbfe" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#a2)"/>
+
+  <!-- Arrow to backend -->
+  <rect x="715" y="310" width="175" height="50" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="802" y="330" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">FastAPI :8001</text>
+  <text x="802" y="348" text-anchor="middle" font-size="11" fill="#64748b">localhost:8001/api/*</text>
+  <line x1="637" y1="335" x2="715" y2="335" stroke="#bbf7d0" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- Locale label -->
+  <text x="449" y="395" text-anchor="middle" font-size="11" fill="#94a3b8">Locales: client/src/locales/en.js · ja.js</text>
+</svg>
+</div>
+
+<h3>Filter data-flow</h3>
+<p>All four global filter values (Time Period, Location, Category, Order Status) are held in a singleton <code>useFilters()</code> composable. FilterBar writes to it; views read from it and re-fetch via <code>api.js</code> when values change.</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Step</th><th>Actor</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>FilterBar.vue</td><td>User selects a value → writes to <code>useFilters()</code> ref</td></tr>
+    <tr><td>2</td><td>useFilters()</td><td>Reactive ref updates; all watchers notified</td></tr>
+    <tr><td>3</td><td>View component</td><td><code>watch(selectedLocation, loadData)</code> triggers</td></tr>
+    <tr><td>4</td><td>View → api.js</td><td><code>getCurrentFilters()</code> called → params object built</td></tr>
+    <tr><td>5</td><td>api.js</td><td>URLSearchParams constructed; 'all' values omitted; axios GET fired</td></tr>
+    <tr><td>6</td><td>FastAPI</td><td>Query params received; in-memory data filtered; JSON returned</td></tr>
+    <tr><td>7</td><td>View component</td><td><code>ref(data).value</code> updated → Vue re-renders</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ─── 3. Backend Architecture ─── -->
+<h2><span class="num">3</span> Backend Architecture</h2>
+
+<p>The backend is a single-file FastAPI application (<code>server/main.py</code>) with a companion data-loader module (<code>server/mock_data.py</code>). All data is loaded once at startup and held in module-level Python lists for the lifetime of the process.</p>
+
+<h3>Startup sequence</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Step</th><th>What happens</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><code>uvicorn main:app</code> imports <code>main.py</code></td></tr>
+    <tr><td>2</td><td><code>mock_data.py</code> is imported — <code>load_json_file()</code> reads every <code>data/*.json</code> into memory</td></tr>
+    <tr><td>3</td><td>Module-level variables (<code>inventory_items</code>, <code>orders</code>, …) are populated — they stay constant for the entire session</td></tr>
+    <tr><td>4</td><td><code>FastAPI()</code> instance created, CORS middleware added (<code>allow_origins=["*"]</code>)</td></tr>
+    <tr><td>5</td><td>All <code>@app.get / @app.post</code> decorators register routes</td></tr>
+    <tr><td>6</td><td>Uvicorn starts listening on <code>0.0.0.0:8001</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Internal structure of main.py</h3>
+<div class="diagram-wrap">
+<svg viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;display:block;margin:0 auto">
+  <defs>
+    <marker id="ba" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0,7 2.5,0 5" fill="#cbd5e1"/>
+    </marker>
+  </defs>
+
+  <!-- Startup block -->
+  <rect x="20" y="20" width="200" height="280" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="120" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing=".05em">STARTUP (once)</text>
+  <rect x="36" y="52" width="168" height="36" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="120" y="68" text-anchor="middle" font-size="11" fill="#334155">mock_data.py</text>
+  <text x="120" y="82" text-anchor="middle" font-size="10" fill="#64748b">load_json_file() × 7</text>
+  <rect x="36" y="98" width="168" height="36" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="120" y="114" text-anchor="middle" font-size="11" fill="#334155">Module globals</text>
+  <text x="120" y="128" text-anchor="middle" font-size="10" fill="#64748b">inventory_items, orders …</text>
+  <rect x="36" y="144" width="168" height="36" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="120" y="160" text-anchor="middle" font-size="11" fill="#334155">FastAPI() + CORS</text>
+  <text x="120" y="174" text-anchor="middle" font-size="10" fill="#64748b">middleware registered</text>
+  <rect x="36" y="190" width="168" height="36" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="120" y="206" text-anchor="middle" font-size="11" fill="#334155">Pydantic models</text>
+  <text x="120" y="220" text-anchor="middle" font-size="10" fill="#64748b">InventoryItem, Order …</text>
+  <rect x="36" y="236" width="168" height="46" rx="6" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="120" y="252" text-anchor="middle" font-size="11" fill="#166534">Route handlers</text>
+  <text x="120" y="267" text-anchor="middle" font-size="10" fill="#64748b">@app.get / @app.post</text>
+  <text x="120" y="279" text-anchor="middle" font-size="10" fill="#64748b">16 endpoints registered</text>
+
+  <!-- Per-request block -->
+  <rect x="280" y="20" width="560" height="280" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="560" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing=".05em">PER REQUEST</text>
+
+  <!-- Request flow boxes -->
+  <rect x="296" y="52" width="130" height="44" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="361" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">HTTP request</text>
+  <text x="361" y="84" text-anchor="middle" font-size="10" fill="#64748b">GET /api/orders?warehouse=…</text>
+
+  <line x1="426" y1="74" x2="455" y2="74" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#ba)"/>
+
+  <rect x="456" y="52" width="145" height="44" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="528" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">Query param parse</text>
+  <text x="528" y="84" text-anchor="middle" font-size="10" fill="#64748b">FastAPI injects typed args</text>
+
+  <line x1="601" y1="74" x2="630" y2="74" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#ba)"/>
+
+  <rect x="631" y="52" width="193" height="44" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="727" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">Route function called</text>
+  <text x="727" y="84" text-anchor="middle" font-size="10" fill="#64748b">e.g. get_orders(warehouse, …)</text>
+
+  <!-- Filter utilities -->
+  <line x1="727" y1="96" x2="727" y2="120" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#ba)"/>
+  <rect x="631" y="121" width="193" height="56" rx="6" fill="#fffbeb" stroke="#fed7aa"/>
+  <text x="727" y="139" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">Filter utilities</text>
+  <text x="727" y="153" text-anchor="middle" font-size="10" fill="#78350f">apply_filters(warehouse, category, status)</text>
+  <text x="727" y="167" text-anchor="middle" font-size="10" fill="#78350f">filter_by_month(items, month)</text>
+
+  <!-- Reads global -->
+  <line x1="631" y1="149" x2="490" y2="149" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#ba)"/>
+  <rect x="296" y="121" width="193" height="56" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="392" y="139" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">In-memory data</text>
+  <text x="392" y="153" text-anchor="middle" font-size="10" fill="#64748b">Read from module globals</text>
+  <text x="392" y="167" text-anchor="middle" font-size="10" fill="#64748b">No writes during GET requests</text>
+
+  <!-- Pydantic serialise -->
+  <line x1="727" y1="177" x2="727" y2="204" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#ba)"/>
+  <rect x="631" y="205" width="193" height="44" rx="6" fill="white" stroke="#e2e8f0"/>
+  <text x="727" y="223" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">Pydantic serialise</text>
+  <text x="727" y="237" text-anchor="middle" font-size="10" fill="#64748b">response_model validates output</text>
+
+  <!-- JSON response -->
+  <line x1="727" y1="249" x2="727" y2="274" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#ba)"/>
+  <rect x="631" y="275" width="193" height="30" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="727" y="295" text-anchor="middle" font-size="11" fill="#1e40af">JSON response → client</text>
+
+  <!-- POST note -->
+  <rect x="296" y="215" width="193" height="56" rx="6" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="392" y="233" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">POST /api/tasks only</text>
+  <text x="392" y="247" text-anchor="middle" font-size="10" fill="#7f1d1d">Appends to purchase_orders</text>
+  <text x="392" y="261" text-anchor="middle" font-size="10" fill="#7f1d1d">list — lost on restart</text>
+</svg>
+</div>
+
+<h3>Shared filter utilities</h3>
+<p>Two helper functions in <code>main.py</code> centralise all filtering logic. Every endpoint that accepts filter params calls these rather than re-implementing the logic.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Function</th><th>Params</th><th>Logic</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>apply_filters(items, warehouse, category, status)</code></td>
+      <td>All optional</td>
+      <td>Sequential list comprehensions; skips filter if value is <code>None</code> or <code>'all'</code>; case-insensitive on category/status</td>
+    </tr>
+    <tr>
+      <td><code>filter_by_month(items, month)</code></td>
+      <td>month: YYYY-MM or Q1–Q4 string</td>
+      <td>If <code>month</code> starts with <code>Q</code>, expands to the three constituent months via <code>QUARTER_MAP</code>; otherwise substring-matches <code>order_date</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Pydantic models defined in main.py</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Model</th><th>Used by</th><th>Notable fields</th></tr></thead>
+  <tbody>
+    <tr><td><code>InventoryItem</code></td><td>GET /api/inventory</td><td><code>warehouse</code> (city), <code>location</code> (shelf code), <code>quantity_on_hand</code>, <code>reorder_point</code></td></tr>
+    <tr><td><code>Order</code></td><td>GET /api/orders</td><td><code>items: List[dict]</code> (embedded line items), <code>warehouse</code> &amp; <code>category</code> are optional denormalised fields</td></tr>
+    <tr><td><code>DemandForecast</code></td><td>GET /api/demand</td><td><code>trend</code> enum: increasing / stable / decreasing</td></tr>
+    <tr><td><code>BacklogItem</code></td><td>GET /api/backlog</td><td><code>has_purchase_order</code> is computed at request time by joining against <code>purchase_orders</code></td></tr>
+    <tr><td><code>PurchaseOrder</code></td><td>GET/POST /api/purchase-orders</td><td><code>backlog_item_id</code> foreign key; writes persist in memory only</td></tr>
+    <tr><td><code>CreatePurchaseOrderRequest</code></td><td>POST request body</td><td>Input-only model; no <code>id</code> or <code>created_date</code> — server assigns those</td></tr>
+    <tr><td><code>RestockRecommendation</code></td><td>GET /api/restocking</td><td>Fully computed — not stored; derived by joining inventory + demand_forecasts + backlog_items at query time</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ─── 4. API Endpoints ─── -->
+<h2><span class="num">4</span> API Endpoint Reference</h2>
+
+<p>All endpoints are under the <code>/api</code> prefix and return JSON. Base URL: <code>http://localhost:8001</code>. Interactive docs available at <code>/docs</code> (Swagger UI) and <code>/redoc</code>.</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Method</th><th>Path</th><th>Query Params</th><th>Returns</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/inventory</code></td>
+      <td><code>warehouse</code> <code>category</code></td>
+      <td>List of InventoryItem</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/inventory/{item_id}</code></td>
+      <td>—</td>
+      <td>InventoryItem or 404</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/orders</code></td>
+      <td><code>warehouse</code> <code>category</code> <code>status</code> <code>month</code></td>
+      <td>List of Order</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/orders/{order_id}</code></td>
+      <td>—</td>
+      <td>Order or 404</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/demand</code></td>
+      <td>—</td>
+      <td>List of DemandForecast</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/backlog</code></td>
+      <td>—</td>
+      <td>List of BacklogItem</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/dashboard/summary</code></td>
+      <td><code>warehouse</code> <code>category</code> <code>status</code> <code>month</code></td>
+      <td>DashboardSummary</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/spending/summary</code></td>
+      <td>—</td>
+      <td>SpendingSummary</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/spending/monthly</code></td>
+      <td>—</td>
+      <td>List of MonthlySpending</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/spending/categories</code></td>
+      <td>—</td>
+      <td>List of CategorySpending</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/spending/transactions</code></td>
+      <td>—</td>
+      <td>List of Transaction</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/reports/quarterly</code></td>
+      <td><code>warehouse</code> <code>category</code></td>
+      <td>List of QuarterlyReport</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/reports/monthly-trends</code></td>
+      <td><code>warehouse</code> <code>category</code></td>
+      <td>List of MonthlyTrend</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/restocking</code></td>
+      <td><code>warehouse</code> <code>budget</code></td>
+      <td>List of RestockRecommendation</td>
+    </tr>
+    <tr>
+      <td><span class="method post">POST</span></td>
+      <td><code>/api/tasks</code></td>
+      <td>Body: <code>{ title, priority, due_date }</code></td>
+      <td>Task</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/api/tasks</code></td>
+      <td>—</td>
+      <td>List of Task</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>All <code>warehouse</code> / <code>category</code> / <code>status</code> params accept their full display names (e.g. <code>San Francisco</code>, <code>Circuit Boards</code>). Passing <code>all</code> or omitting the parameter returns unfiltered results.</p>
+
+<!-- ─── 4. Data Models ─── -->
+<h2><span class="num">4</span> Data Models</h2>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-title">InventoryItem</div>
+    <div class="endpoint-row"><span class="ep-path">id</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">sku</span><span class="ep-note">string — e.g. TMP-201</span></div>
+    <div class="endpoint-row"><span class="ep-path">name</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">category</span><span class="ep-note">Circuit Boards · Sensors · Actuators…</span></div>
+    <div class="endpoint-row"><span class="ep-path">warehouse</span><span class="ep-note">San Francisco · London · Tokyo</span></div>
+    <div class="endpoint-row"><span class="ep-path">quantity_on_hand</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">reorder_point</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">unit_cost</span><span class="ep-note">float (USD)</span></div>
+    <div class="endpoint-row"><span class="ep-path">location</span><span class="ep-note">shelf code — e.g. Warehouse A-17</span></div>
+    <div class="endpoint-row"><span class="ep-path">last_updated</span><span class="ep-note">ISO 8601 date</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Order</div>
+    <div class="endpoint-row"><span class="ep-path">id</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">order_number</span><span class="ep-note">string — e.g. ORD-2025-0042</span></div>
+    <div class="endpoint-row"><span class="ep-path">customer</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">items</span><span class="ep-note">list of { sku, name, qty, unit_price }</span></div>
+    <div class="endpoint-row"><span class="ep-path">status</span><span class="ep-note">Delivered · Shipped · Processing · Backordered</span></div>
+    <div class="endpoint-row"><span class="ep-path">order_date</span><span class="ep-note">ISO 8601 date</span></div>
+    <div class="endpoint-row"><span class="ep-path">expected_delivery</span><span class="ep-note">ISO 8601 date</span></div>
+    <div class="endpoint-row"><span class="ep-path">actual_delivery</span><span class="ep-note">ISO 8601 date · optional</span></div>
+    <div class="endpoint-row"><span class="ep-path">total_value</span><span class="ep-note">float (USD)</span></div>
+    <div class="endpoint-row"><span class="ep-path">warehouse · category</span><span class="ep-note">optional denormalised fields</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">RestockRecommendation</div>
+    <div class="endpoint-row"><span class="ep-path">item_sku · item_name</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">category · warehouse</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">current_stock</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">reorder_point</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">forecasted_demand</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">quantity_to_order</span><span class="ep-note">int — derived</span></div>
+    <div class="endpoint-row"><span class="ep-path">unit_cost · total_cost</span><span class="ep-note">float (USD)</span></div>
+    <div class="endpoint-row"><span class="ep-path">priority</span><span class="ep-note">critical · high · medium · low</span></div>
+    <div class="endpoint-row"><span class="ep-path">reason</span><span class="ep-note">backlog_critical · demand_spike · low_stock</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">DemandForecast</div>
+    <div class="endpoint-row"><span class="ep-path">id</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">item_sku · item_name</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">current_demand</span><span class="ep-note">int (units/month)</span></div>
+    <div class="endpoint-row"><span class="ep-path">forecasted_demand</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">trend</span><span class="ep-note">increasing · stable · decreasing</span></div>
+    <div class="endpoint-row"><span class="ep-path">period</span><span class="ep-note">string — e.g. 2026-Q2</span></div>
+    <br>
+    <div class="card-title" style="margin-top:12px">BacklogItem</div>
+    <div class="endpoint-row"><span class="ep-path">order_id · item_sku · item_name</span><span class="ep-note">string</span></div>
+    <div class="endpoint-row"><span class="ep-path">quantity_needed · quantity_available</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">days_delayed</span><span class="ep-note">int</span></div>
+    <div class="endpoint-row"><span class="ep-path">priority</span><span class="ep-note">High · Medium · Low</span></div>
+  </div>
+</div>
+
+<!-- ─── 6. JSON Storage ─── -->
+<h2><span class="num">6</span> JSON Storage Layer</h2>
+
+<p>All persistent data lives in seven JSON files under <code>server/data/</code>. They are read once at startup by <code>mock_data.py</code> and held as Python lists/dicts for the process lifetime. <strong>No writes are persisted</strong> — restarting the server reloads the originals.</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>File</th><th>Records</th><th>Top-level shape</th><th>Primary key</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>inventory.json</code></td>
+      <td>32</td>
+      <td>Array of objects</td>
+      <td><code>id</code> (string "1"–"32")</td>
+      <td>One row per SKU per warehouse; <code>location</code> is shelf code, <code>warehouse</code> is city</td>
+    </tr>
+    <tr>
+      <td><code>orders.json</code></td>
+      <td>250</td>
+      <td>Array of objects</td>
+      <td><code>id</code> (string)</td>
+      <td>Each order embeds its line items as a nested array; <code>warehouse</code> and <code>category</code> are denormalised onto the order header</td>
+    </tr>
+    <tr>
+      <td><code>demand_forecasts.json</code></td>
+      <td>9</td>
+      <td>Array of objects</td>
+      <td><code>id</code> (string)</td>
+      <td>One forecast per SKU; <code>trend</code> is increasing / stable / decreasing; period is "Next 30 days" for all current rows</td>
+    </tr>
+    <tr>
+      <td><code>backlog_items.json</code></td>
+      <td>4</td>
+      <td>Array of objects</td>
+      <td><code>id</code> (string)</td>
+      <td>Links to <code>orders</code> via <code>order_id</code>; <code>has_purchase_order</code> is computed at runtime by joining against <code>purchase_orders</code></td>
+    </tr>
+    <tr>
+      <td><code>purchase_orders.json</code></td>
+      <td>0 (empty)</td>
+      <td>Array of objects</td>
+      <td><code>id</code> (string)</td>
+      <td>New POs created via POST /api/purchase-orders are appended here in memory only — file stays empty; links to backlog via <code>backlog_item_id</code></td>
+    </tr>
+    <tr>
+      <td><code>spending.json</code></td>
+      <td>1 object</td>
+      <td>Single object with three keys</td>
+      <td>—</td>
+      <td><code>spending_summary</code> (annual totals), <code>monthly_spending</code> (12-item array), <code>category_spending</code> (4-item array) — all USD, calendar year 2025</td>
+    </tr>
+    <tr>
+      <td><code>transactions.json</code></td>
+      <td>56</td>
+      <td>Array of objects</td>
+      <td><code>id</code> (string)</td>
+      <td>Recent ledger transactions; not filterable via API — always returned in full</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Entity relationships</h3>
+<div class="diagram-wrap">
+<svg viewBox="0 0 820 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:820px;display:block;margin:0 auto">
+  <defs>
+    <marker id="rel" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#94a3b8"/>
+    </marker>
+    <marker id="rel2" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8 0,0 3,8 6" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <!-- inventory -->
+  <rect x="20" y="60" width="160" height="110" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+  <rect x="20" y="60" width="160" height="28" rx="8" fill="#1e293b"/>
+  <rect x="20" y="76" width="160" height="12" fill="#1e293b"/>
+  <text x="100" y="79" text-anchor="middle" font-size="11" font-weight="700" fill="white">inventory.json</text>
+  <text x="28" y="104" font-size="10" fill="#475569">🔑 id</text>
+  <text x="28" y="119" font-size="10" fill="#475569">   sku (e.g. TMP-201)</text>
+  <text x="28" y="134" font-size="10" fill="#475569">   warehouse · category</text>
+  <text x="28" y="149" font-size="10" fill="#475569">   quantity_on_hand · unit_cost</text>
+  <text x="28" y="164" font-size="10" fill="#94a3b8">   32 records</text>
+
+  <!-- demand_forecasts -->
+  <rect x="220" y="10" width="165" height="100" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+  <rect x="220" y="10" width="165" height="28" rx="8" fill="#7c3aed"/>
+  <rect x="220" y="26" width="165" height="12" fill="#7c3aed"/>
+  <text x="302" y="29" text-anchor="middle" font-size="11" font-weight="700" fill="white">demand_forecasts.json</text>
+  <text x="228" y="54" font-size="10" fill="#475569">🔑 id</text>
+  <text x="228" y="69" font-size="10" fill="#475569">→  item_sku (soft ref to inventory)</text>
+  <text x="228" y="84" font-size="10" fill="#475569">   current/forecasted_demand</text>
+  <text x="228" y="99" font-size="10" fill="#94a3b8">   9 records</text>
+
+  <!-- orders -->
+  <rect x="220" y="145" width="165" height="110" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+  <rect x="220" y="145" width="165" height="28" rx="8" fill="#0369a1"/>
+  <rect x="220" y="161" width="165" height="12" fill="#0369a1"/>
+  <text x="302" y="164" text-anchor="middle" font-size="11" font-weight="700" fill="white">orders.json</text>
+  <text x="228" y="189" font-size="10" fill="#475569">🔑 id / order_number</text>
+  <text x="228" y="204" font-size="10" fill="#475569">   items[ ] (embedded)</text>
+  <text x="228" y="219" font-size="10" fill="#475569">   warehouse · category (denorm)</text>
+  <text x="228" y="234" font-size="10" fill="#475569">   status · dates</text>
+  <text x="228" y="249" font-size="10" fill="#94a3b8">   250 records</text>
+
+  <!-- backlog_items -->
+  <rect x="440" y="145" width="165" height="110" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+  <rect x="440" y="145" width="165" height="28" rx="8" fill="#dc2626"/>
+  <rect x="440" y="161" width="165" height="12" fill="#dc2626"/>
+  <text x="522" y="164" text-anchor="middle" font-size="11" font-weight="700" fill="white">backlog_items.json</text>
+  <text x="448" y="189" font-size="10" fill="#475569">🔑 id</text>
+  <text x="448" y="204" font-size="10" fill="#475569">→  order_id (→ orders.id)</text>
+  <text x="448" y="219" font-size="10" fill="#475569">   item_sku · priority</text>
+  <text x="448" y="234" font-size="10" fill="#475569">   qty_needed · qty_available</text>
+  <text x="448" y="249" font-size="10" fill="#94a3b8">   4 records</text>
+
+  <!-- purchase_orders -->
+  <rect x="650" y="145" width="155" height="110" rx="8" fill="white" stroke="#fecaca" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <rect x="650" y="145" width="155" height="28" rx="8" fill="#fef2f2"/>
+  <rect x="650" y="161" width="155" height="12" fill="#fef2f2"/>
+  <text x="727" y="164" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">purchase_orders.json</text>
+  <text x="658" y="189" font-size="10" fill="#475569">🔑 id</text>
+  <text x="658" y="204" font-size="10" fill="#475569">→  backlog_item_id (→ backlog.id)</text>
+  <text x="658" y="219" font-size="10" fill="#475569">   supplier · qty · unit_cost</text>
+  <text x="658" y="234" font-size="10" fill="#991b1b">   ⚠ in-memory only</text>
+  <text x="658" y="249" font-size="10" fill="#94a3b8">   0 records (empty file)</text>
+
+  <!-- spending + transactions (standalone) -->
+  <rect x="440" y="10" width="155" height="74" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+  <rect x="440" y="10" width="155" height="28" rx="8" fill="#059669"/>
+  <rect x="440" y="26" width="155" height="12" fill="#059669"/>
+  <text x="517" y="29" text-anchor="middle" font-size="11" font-weight="700" fill="white">spending.json</text>
+  <text x="448" y="54" font-size="10" fill="#475569">summary · monthly · categories</text>
+  <text x="448" y="69" font-size="10" fill="#94a3b8">1 object, no FK links</text>
+
+  <rect x="650" y="10" width="155" height="74" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+  <rect x="650" y="10" width="155" height="28" rx="8" fill="#64748b"/>
+  <rect x="650" y="26" width="155" height="12" fill="#64748b"/>
+  <text x="727" y="29" text-anchor="middle" font-size="11" font-weight="700" fill="white">transactions.json</text>
+  <text x="658" y="54" font-size="10" fill="#475569">56 ledger records</text>
+  <text x="658" y="69" font-size="10" fill="#94a3b8">no FK links</text>
+
+  <!-- Relationship arrows -->
+  <!-- inventory → demand_forecasts (soft ref by sku) -->
+  <line x1="180" y1="90" x2="220" y2="60" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#rel)"/>
+  <text x="194" y="70" font-size="9" fill="#94a3b8">sku</text>
+
+  <!-- orders → backlog -->
+  <line x1="385" y1="200" x2="440" y2="200" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rel)"/>
+  <text x="408" y="195" font-size="9" fill="#64748b">order_id</text>
+
+  <!-- backlog → purchase_orders -->
+  <line x1="605" y1="200" x2="650" y2="200" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rel)"/>
+  <text x="618" y="195" font-size="9" fill="#64748b">backlog_item_id</text>
+</svg>
+</div>
+
+<h3>Key referential notes</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Relationship</th><th>Enforced?</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>demand_forecasts.item_sku</code> → <code>inventory.sku</code></td>
+      <td><span class="badge badge-amber">Soft ref</span></td>
+      <td>No FK constraint; the 9 forecast SKUs are a subset of the 32 inventory SKUs. The restocking algorithm joins them in Python at query time.</td>
+    </tr>
+    <tr>
+      <td><code>backlog_items.order_id</code> → <code>orders.id / order_number</code></td>
+      <td><span class="badge badge-amber">Soft ref</span></td>
+      <td>Dashboard joins backlog to orders by <code>order_id</code> to show shortage context. No constraint validation.</td>
+    </tr>
+    <tr>
+      <td><code>purchase_orders.backlog_item_id</code> → <code>backlog_items.id</code></td>
+      <td><span class="badge badge-amber">Soft ref</span></td>
+      <td>The <code>/api/backlog</code> endpoint computes <code>has_purchase_order</code> by scanning <code>purchase_orders</code> for matching <code>backlog_item_id</code>.</td>
+    </tr>
+    <tr>
+      <td><code>orders.items[].sku</code> → <code>inventory.sku</code></td>
+      <td><span class="badge badge-slate">Denorm</span></td>
+      <td>Line-item SKUs are embedded inside each order object. No live join performed — order data is self-contained.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <strong>Updating data:</strong> Edit the relevant JSON file, then restart the server (<code>uvicorn main:app --reload</code>). Validate JSON structure before committing — a malformed file will crash the import and the server will not start.
+</div>
+
+<!-- ─── 7. Directory structure ─── -->
+<h2><span class="num">7</span> Repository Layout</h2>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-title">Frontend — client/</div>
+    <div class="endpoint-row"><span class="ep-path">src/main.js</span><span class="ep-note">Router setup, app mount</span></div>
+    <div class="endpoint-row"><span class="ep-path">src/App.vue</span><span class="ep-note">Layout, nav, modals</span></div>
+    <div class="endpoint-row"><span class="ep-path">src/api.js</span><span class="ep-note">Axios client, all HTTP calls</span></div>
+    <div class="endpoint-row"><span class="ep-path">src/views/</span><span class="ep-note">7 page components</span></div>
+    <div class="endpoint-row"><span class="ep-path">src/components/</span><span class="ep-note">9 reusable components</span></div>
+    <div class="endpoint-row"><span class="ep-path">src/composables/</span><span class="ep-note">useFilters · useI18n · useAuth</span></div>
+    <div class="endpoint-row"><span class="ep-path">src/locales/en.js</span><span class="ep-note">English translation keys</span></div>
+    <div class="endpoint-row"><span class="ep-path">src/locales/ja.js</span><span class="ep-note">Japanese translation keys</span></div>
+    <div class="endpoint-row"><span class="ep-path">package.json</span><span class="ep-note">Vue 3.4 · Vite 5.2 · Axios 1.6</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Backend — server/</div>
+    <div class="endpoint-row"><span class="ep-path">main.py</span><span class="ep-note">All routes, models, startup</span></div>
+    <div class="endpoint-row"><span class="ep-path">data/inventory.json</span><span class="ep-note">~30 items</span></div>
+    <div class="endpoint-row"><span class="ep-path">data/orders.json</span><span class="ep-note">~250+ orders (2025)</span></div>
+    <div class="endpoint-row"><span class="ep-path">data/demand_forecasts.json</span><span class="ep-note">9 SKU forecasts</span></div>
+    <div class="endpoint-row"><span class="ep-path">data/backlog_items.json</span><span class="ep-note">4 shortage records</span></div>
+    <div class="endpoint-row"><span class="ep-path">data/spending.json</span><span class="ep-note">Annual + monthly cost data</span></div>
+    <div class="endpoint-row"><span class="ep-path">data/transactions.json</span><span class="ep-note">Recent transactions</span></div>
+    <div class="endpoint-row"><span class="ep-path">data/purchase_orders.json</span><span class="ep-note">PO records</span></div>
+    <div class="endpoint-row"><span class="ep-path">pyproject.toml</span><span class="ep-note">FastAPI 0.110+ · Python 3.11+</span></div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:0;margin-bottom:28px">
+  <div class="card-title">Test suite — tests/</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <div>
+      <div class="endpoint-row"><span class="ep-path">tests/backend/</span><span class="ep-note">51 pytest tests · FastAPI TestClient · no DB needed</span></div>
+      <div class="endpoint-row"><span class="ep-path">tests/pytest.ini</span><span class="ep-note">pytest config</span></div>
+    </div>
+    <div>
+      <div class="endpoint-row"><span class="ep-path">tests/e2e/specs/</span><span class="ep-note">28 Playwright tests · Chromium headless</span></div>
+      <div class="endpoint-row"><span class="ep-path">tests/e2e/playwright.config.js</span><span class="ep-note">baseURL localhost:3000</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 8. Key Patterns ─── -->
+<h2><span class="num">8</span> Key Patterns for Future Maintainers</h2>
+
+<h3>Adding a new view</h3>
+<ol style="margin:0 0 16px 20px;color:#475569;line-height:2">
+  <li>Create <code>client/src/views/MyView.vue</code> using Composition API + <code>useFilters()</code> + <code>useI18n()</code></li>
+  <li>Add route in <code>client/src/main.js</code></li>
+  <li>Add nav link in <code>client/src/App.vue</code></li>
+  <li>Add translation keys to <code>src/locales/en.js</code> and <code>src/locales/ja.js</code></li>
+</ol>
+
+<h3>Adding a new API endpoint</h3>
+<ol style="margin:0 0 16px 20px;color:#475569;line-height:2">
+  <li>Define a Pydantic model in <code>server/main.py</code></li>
+  <li>Add <code>@app.get("/api/...")</code> function with <code>Optional[str]</code> query params</li>
+  <li>Add corresponding method to <code>client/src/api.js</code></li>
+</ol>
+
+<h3>Internationalization</h3>
+<p>All user-visible strings should go through <code>t('key.path')</code>. Add the key to both <code>en.js</code> and <code>ja.js</code> before using it in a template. Product names, customer names, and warehouse names have dedicated translation maps in each locale file.</p>
+
+<h3>Running tests</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Suite</th><th>Command</th><th>Requires</th></tr></thead>
+  <tbody>
+    <tr><td>Backend (pytest)</td><td><code>cd tests &amp;&amp; uv run pytest -v</code></td><td>Backend deps only</td></tr>
+    <tr><td>E2E (Playwright)</td><td><code>cd tests/e2e &amp;&amp; npx playwright test</code></td><td>Both servers running</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ─── 9. Limitations & Recommended Next Steps ─── -->
+<h2><span class="num">9</span> Limitations &amp; Recommended Next Steps</h2>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Area</th><th>Current State</th><th>Recommended Action</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><span class="badge badge-red">Critical</span></td>
+      <td>No persistent storage — all data in memory, lost on restart</td>
+      <td>Migrate to PostgreSQL or SQLite with SQLAlchemy</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-red">Critical</span></td>
+      <td>No authentication — any user can access all data</td>
+      <td>Add OAuth2 / session-based auth before internet exposure</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-amber">High</span></td>
+      <td>CORS allows all origins (<code>*</code>)</td>
+      <td>Restrict to Meridian's internal domain(s) before production</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-amber">High</span></td>
+      <td>API base URL hardcoded to <code>localhost:8001</code> in <code>api.js</code></td>
+      <td>Move to environment variable (<code>VITE_API_BASE_URL</code>)</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-amber">High</span></td>
+      <td>No backend unit tests for the new <code>/api/restocking</code> endpoint</td>
+      <td>Add to <code>tests/backend/</code> following existing pattern</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-slate">Medium</span></td>
+      <td>Single <code>main.py</code> file handles all routes, models and startup</td>
+      <td>Split into <code>routers/</code>, <code>models/</code>, <code>data/</code> as endpoints grow</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-slate">Medium</span></td>
+      <td>Charts are hand-crafted SVG with no interactivity</td>
+      <td>Consider Chart.js or Apache ECharts for more complex analytics</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-green">Low</span></td>
+      <td>Finance / Demand views do not react to warehouse/category filter</td>
+      <td>Wire up remaining endpoints to accept filter params</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- footer -->
+<div style="margin-top:60px;padding-top:20px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:12px;display:flex;justify-content:space-between">
+  <span>Meridian Components · Inventory Management System · Architecture Handoff</span>
+  <span>MC-2026-0417 · April 2026</span>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>
